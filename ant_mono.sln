@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ant_mono", "ant_mono\ant_mono.csproj", "{600BAA44-FA93-48DA-BE37-61F4BA9B5EEA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AntInterface", "AntInterface\AntInterface.csproj", "{9011A0CE-9A66-4066-83DA-7A4C2601B2F6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -13,6 +15,10 @@ Global
 		{600BAA44-FA93-48DA-BE37-61F4BA9B5EEA}.Debug|x86.Build.0 = Debug|x86
 		{600BAA44-FA93-48DA-BE37-61F4BA9B5EEA}.Release|x86.ActiveCfg = Release|x86
 		{600BAA44-FA93-48DA-BE37-61F4BA9B5EEA}.Release|x86.Build.0 = Release|x86
+		{9011A0CE-9A66-4066-83DA-7A4C2601B2F6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9011A0CE-9A66-4066-83DA-7A4C2601B2F6}.Debug|x86.Build.0 = Debug|Any CPU
+		{9011A0CE-9A66-4066-83DA-7A4C2601B2F6}.Release|x86.ActiveCfg = Release|Any CPU
+		{9011A0CE-9A66-4066-83DA-7A4C2601B2F6}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = ant_mono\ant_mono.csproj
