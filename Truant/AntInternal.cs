@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace AntInterface
+namespace Truant
 {
 	public class AntInternal
 	{		

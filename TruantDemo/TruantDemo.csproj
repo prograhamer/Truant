@@ -7,8 +7,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{600BAA44-FA93-48DA-BE37-61F4BA9B5EEA}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>ant_mono</RootNamespace>
-    <AssemblyName>ant_mono</AssemblyName>
+    <RootNamespace>TruantDemo</RootNamespace>
+    <AssemblyName>TruantDemo</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -40,9 +40,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\AntInterface\AntInterface.csproj">
+    <ProjectReference Include="..\Truant\Truant.csproj">
       <Project>{9011A0CE-9A66-4066-83DA-7A4C2601B2F6}</Project>
-      <Name>AntInterface</Name>
+      <Name>Truant</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>

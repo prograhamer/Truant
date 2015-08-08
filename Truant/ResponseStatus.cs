@@ -1,5 +1,5 @@
 using System;
-namespace AntInterface
+namespace Truant
 {
 	public class ResponseStatus
 	{

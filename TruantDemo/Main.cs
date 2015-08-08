@@ -1,9 +1,9 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;
-using AntInterface;
+using Truant;
 
-namespace ant_mono
+namespace TruantDemo
 {
 	class MainClass
 	{
