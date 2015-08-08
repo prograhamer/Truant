@@ -29,9 +29,9 @@ namespace Truant
 		public static extern byte [] ANT_LibVersion(); // Obtains the version number of the dynamic library
 
 		[DllImport ("libANT")]
-		public static extern void ANT_AssignResponseFunction(AssignResponseDelegate cb, byte[] buffer);
+		public static extern void ANT_AssignResponseFunction(AssignResponseDelegate pfResponse, byte[] pucResponseBuffer);
 		[DllImport ("libANT")]
-		public static extern void ANT_AssignChannelEventFunction(ChannelEventDelegate cb, byte[] buffer);
+		public static extern void ANT_AssignChannelEventFunction(byte ucLink, ChannelEventDelegate pfLinkEvent, byte[] pucRxBuffer);
 		[DllImport ("libANT")]
 		public static extern void ANT_UnassignAllResponseFunctions();	//Unassigns all response functions
 
