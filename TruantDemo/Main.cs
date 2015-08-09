@@ -17,13 +17,13 @@ namespace TruantDemo
 		private static byte [] responseBuffer = new byte[32];
 		private static byte [] channelEventBuffer = new byte[32];
 
-		public static bool assignResponseCallback(byte channel, byte messageID)
+		public static bool assignResponseCallback(byte channel, Truant.MessageType messageID)
 		{
 			Console.WriteLine ("Got AR callback: " + channel + " / msgId: " + messageID);
 
 			if (messageID == MessageType.RESPONSE_EVENT_ID) {
-				byte arMessageID = responseBuffer[1];
-				byte arStatus = responseBuffer[2];
+				Truant.MessageType arMessageID = (Truant.MessageType) responseBuffer[1];
+				Truant.ResponseStatus arStatus = (Truant.ResponseStatus) responseBuffer[2];
 
 				Console.WriteLine ("arMessageId: " + arMessageID + ", arStatus: " + arStatus);
 
@@ -80,7 +80,7 @@ namespace TruantDemo
 			return true;
 		}
 
-		public static bool channelEventCallback(byte channel, byte channelEvent)
+		public static bool channelEventCallback(byte channel, Truant.ResponseStatus channelEvent)
 		{
 			Console.WriteLine ("Got CE callback: " + channel + " / channelEvent: " + channelEvent);
 			Console.WriteLine ("HEART RATE IS: " + channelEventBuffer [8] + "!!!");

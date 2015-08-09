@@ -6,9 +6,9 @@ namespace Truant
 	public class AntInternal
 	{
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-		public delegate bool AssignResponseDelegate(byte channel, byte messageID);
+		public delegate bool AssignResponseDelegate(byte channel, Truant.MessageType messageID);
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-		public delegate bool ChannelEventDelegate(byte channel, byte channelEvent);
+		public delegate bool ChannelEventDelegate(byte channel, Truant.ResponseStatus channelEvent);
 
 		[DllImport ("libANT")]
 		public static extern bool ANT_GetDeviceUSBInfo(byte ucUSBDeviceNum, byte [] pucProductString, byte [] pucSerialString);
@@ -43,10 +43,10 @@ namespace Truant
 		public static extern bool ANT_UnAssignChannel(byte ucANTChannel); // Unassign a Channel
 
 		[DllImport ("libANT")]
-		public static extern bool ANT_AssignChannel(byte ucANTChannel, byte ucChanType, byte ucNetNumber);
+		public static extern bool ANT_AssignChannel(byte ucANTChannel, ChannelType ucChanType, byte ucNetNumber);
 
 		[DllImport ("libANT")]
-		public static extern bool ANT_AssignChannelExt(byte ucANTChannel, byte ucChannelType_, byte ucNetNumber, byte ucExtFlags_);
+		public static extern bool ANT_AssignChannelExt(byte ucANTChannel, ChannelType ucChannelType_, byte ucNetNumber, byte ucExtFlags_);
 
 		[DllImport ("libANT")]
 		public static extern bool ANT_SetChannelId(byte ucANTChannel, ushort usDeviceNumber, byte ucDeviceType, byte ucTransmissionType_);
