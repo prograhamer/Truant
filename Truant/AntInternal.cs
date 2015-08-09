@@ -88,7 +88,7 @@ namespace Truant
 		public static extern bool ANT_CloseChannel(byte ucANTChannel); // Close a channel
 
 		[DllImport ("libANT")]
-		public static extern bool ANT_RequestMessage(byte ucANTChannel, byte ucMessageID);
+		public static extern bool ANT_RequestMessage(byte ucANTChannel, MessageType ucMessageID);
 		[DllImport ("libANT")]
 		public static extern bool ANT_WriteMessage(byte ucMessageID, byte [] aucData, ushort usMessageSize);
 
