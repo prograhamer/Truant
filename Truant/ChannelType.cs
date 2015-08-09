@@ -1,4 +1,3 @@
-using System;
 namespace Truant
 {
 	public enum ChannelType : byte

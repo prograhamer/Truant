@@ -39,6 +39,12 @@
     <Compile Include="ResponseStatus.cs" />
     <Compile Include="ChannelStatus.cs" />
     <Compile Include="ChannelType.cs" />
+    <Compile Include="Plus\HeartRateMonitor.cs" />
+    <Compile Include="Plus\Interpreter\HeartRateInterpreter.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="Plus\" />
+    <Folder Include="Plus\Interpreter\" />
+  </ItemGroup>
 </Project>

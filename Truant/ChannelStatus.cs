@@ -1,5 +1,3 @@
-using System;
-
 namespace Truant
 {
 	public enum ChannelStatus : byte
