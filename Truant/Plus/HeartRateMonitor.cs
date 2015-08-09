@@ -7,6 +7,7 @@ namespace Truant.Plus
 	{
 		private const byte ANT_FREQ = 57;
 		private static byte [] NETWORK_KEY = {0xB9, 0xA5, 0x21, 0xFB, 0xBD, 0x72, 0xC3, 0x45};
+		private const byte HR_MONITOR_ID = 0x78;
 
 		private static byte [] responseBuffer = new byte[32];
 		private static byte [] channelEventBuffer = new byte[32];
@@ -69,7 +70,7 @@ namespace Truant.Plus
 					arStatus == ResponseStatus.NO_ERROR) {
 					Console.WriteLine ("Assign Channel went OK, setting channel ID");
 					
-					AntInternal.ANT_SetChannelId (channel, 0, 0x78, 0);
+					AntInternal.ANT_SetChannelId (channel, 0, HR_MONITOR_ID, 0);
 				} else if (arMessageID == MessageType.CHANNEL_ID_ID &&
 					arStatus == ResponseStatus.NO_ERROR) {
 					Console.WriteLine ("Set Channel ID went OK, setting RF frequency");
