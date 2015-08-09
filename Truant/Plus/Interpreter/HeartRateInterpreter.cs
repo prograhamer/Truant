@@ -19,8 +19,6 @@ namespace Truant.Plus.Interpreter
 				data = new HeartRateData();
 			}
 
-			Console.WriteLine ("HeartRateInterpreter: " + BitConverter.ToString(rxData));
-
 			int page = (byte) (rxData [1] & 0x7F);
 			bool pageChange = ((rxData [1] & 0x80) == 0x80);
 
@@ -32,7 +30,7 @@ namespace Truant.Plus.Interpreter
 
 			if (pageChangeOn && pageChangeOff) {
 				if (page == 1) {
-					data.CumulativeOperatingTime = rxData[1] + (rxData[2] << 8) + (rxData[3] << 16);
+					data.CumulativeOperatingTime = rxData[2] + (rxData[3] << 8) + (rxData[4] << 16);
 				} else if (page == 2) {
 					data.ManufacturerID = rxData[2];
 					data.SerialNumber = rxData[3] + (rxData[4] << 8);
