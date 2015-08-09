@@ -25,8 +25,6 @@ namespace TruantDemo
 			Truant.Plus.HeartRateMonitor hrMonitor = new Truant.Plus.HeartRateMonitor (CHANNEL_NO, NETWORK_NO);
 			hrMonitor.Connect ();
 
-			Thread.Sleep (1000);
-
 			hrMonitor.RequestChannelID ();
 
 			Thread.Sleep (30000);

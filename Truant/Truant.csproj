@@ -41,10 +41,12 @@
     <Compile Include="ChannelType.cs" />
     <Compile Include="Plus\HeartRateMonitor.cs" />
     <Compile Include="Plus\Interpreter\HeartRateInterpreter.cs" />
+    <Compile Include="Plus\Data\HeartRateData.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Plus\" />
     <Folder Include="Plus\Interpreter\" />
+    <Folder Include="Plus\Data\" />
   </ItemGroup>
 </Project>

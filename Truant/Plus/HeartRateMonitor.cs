@@ -16,6 +16,8 @@ namespace Truant.Plus
 
 		private static bool channelOpen = false;
 
+		private static Interpreter.HeartRateInterpreter hrInterpreter = new Interpreter.HeartRateInterpreter();
+
 		public HeartRateMonitor (byte channel, byte network)
 		{
 			this.channel = channel;
@@ -112,7 +114,8 @@ namespace Truant.Plus
 				Console.WriteLine ("CHANNEL CLOSED! Unassigning");
 				AntInternal.ANT_UnAssignChannel (channel);
 			} else if (channelEvent == ResponseStatus.EVENT_RX_FLAG_BROADCAST) {
-				Console.WriteLine ("HEART RATE IS: " + channelEventBuffer [8] + "!!!");
+				Data.HeartRateData data = hrInterpreter.interpretReceivedData(channelEventBuffer);
+				Console.WriteLine ("HEART RATE IS: " + data);
 			}
 			return true;
 		}
