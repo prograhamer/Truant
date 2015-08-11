@@ -1,38 +1,27 @@
 using System;
 using System.Threading;
-using Truant;
+using Truant.Plus;
+using Truant.Plus.Devices;
 
 namespace TruantDemo
 {
 	class MainClass
 	{
-		private const byte NETWORK_NO = 0;
-		private const byte CHANNEL_NO = 0;
-		private const uint BAUD = 57600;
-
 		public static void Main (string[] args)
 		{
-			bool result;
+			var connection = AntPlusConnection.GetConnection(0 /* USB device */, 0 /* network no */);
 
-			result = AntInternal.ANT_Init (0 /* Device number */, BAUD);
-			Console.WriteLine ("ANT_Init(): " + result);
+			connection.Connect();
+			var hrMonitor = new HeartRateMonitor();
+			connection.AddDevice(hrMonitor);
 
-			Console.WriteLine ("Resetting module!");
-			result = AntInternal.ANT_ResetSystem ();
-			Console.WriteLine ("ANT_ResetSystem(): " + result);
-			Thread.Sleep (1000);
+			for(int i = 0; i < 45; i++)
+			{
+				Thread.Sleep(1000);
+				Console.WriteLine("Heart rate: " + hrMonitor.ComputedHeartRate);
+			}
 
-			Truant.Plus.HeartRateMonitor hrMonitor = new Truant.Plus.HeartRateMonitor (CHANNEL_NO, NETWORK_NO);
-			hrMonitor.Connect ();
-
-			hrMonitor.RequestChannelID ();
-
-			Thread.Sleep (30000);
-
-			hrMonitor.Disconnect ();
-			Thread.Sleep (1000);
-
-			AntInternal.ANT_Close ();
+			connection.Disconnect();
 		}
 	}
 }
