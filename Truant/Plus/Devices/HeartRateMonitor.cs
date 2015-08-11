@@ -1,6 +1,5 @@
 using System;
 using System.Threading;
-using Truant.Plus.Data;
 
 namespace Truant.Plus.Devices
 {
