@@ -10,15 +10,19 @@ namespace Truant.Plus.Devices
 		public int SpeedEventTime { get; private set; }
 		public int SpeedRevolutionCount { get; private set; }
 
-		public int Cadence { get; private set; }
-		public int Speed { get; private set; }
+		public double Cadence { get; private set; }
+		public double Speed { get; private set; }
 		// ---------------------------------------------------------
 
-		public BikeSpeedCadenceSensor ()
+		private int WheelSize;
+
+		public BikeSpeedCadenceSensor (int wheelSize)
 		{
 			// ID and period as described in device profile
 			DeviceType = 0x79;
 			ChannelPeriod = 8086;
+
+			this.WheelSize = wheelSize;
 		}
 
 		public override void interpretReceivedData(byte [] rxData)
@@ -26,6 +30,7 @@ namespace Truant.Plus.Devices
 			int oldEventTime, oldRevolutionCount;
 			int newEventTime, newRevolutionCount;
 
+			// Cadence update and calculation
 			oldEventTime = CadenceEventTime;
 			oldRevolutionCount = CadenceRevolutionCount;
 
@@ -33,14 +38,25 @@ namespace Truant.Plus.Devices
 			CadenceRevolutionCount = rxData[3] + (rxData[4] << 8);
 
 			newEventTime = CadenceEventTime;
-			if(CadenceEventTime < oldEventTime) newEventTime += 65535;
+			if(newEventTime < oldEventTime) newEventTime += 65535;
 			newRevolutionCount = CadenceRevolutionCount;
-			if(CadenceRevolutionCount < oldRevolutionCount) newRevolutionCount += 65535;
+			if(newRevolutionCount < oldRevolutionCount) newRevolutionCount += 65535;
 
-			Cadence = ((newRevolutionCount - oldRevolutionCount)*60*1024) / (newEventTime - oldEventTime);
+			Cadence = ((newRevolutionCount - oldRevolutionCount)*60.0*1024.0) / (newEventTime - oldEventTime);
+
+			// Speed update and calculation
+			oldEventTime = SpeedEventTime;
+			oldRevolutionCount = SpeedRevolutionCount;
 
 			SpeedEventTime = rxData[5] + (rxData[6] << 8);
 			SpeedRevolutionCount = rxData[7] + (rxData[8] << 8);
+
+			newEventTime = SpeedEventTime;
+			if(newEventTime < oldEventTime) newEventTime += 65535;
+			newRevolutionCount = SpeedRevolutionCount;
+			if(newRevolutionCount < oldRevolutionCount) newRevolutionCount += 65535;
+
+			Speed = ((newRevolutionCount - oldRevolutionCount)*1024.0*WheelSize) / (newEventTime - oldEventTime);
 		}
 	}
 }
