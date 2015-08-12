@@ -1,5 +1,4 @@
 using System;
-using System.Threading;
 
 namespace Truant.Plus.Devices
 {
@@ -20,7 +19,7 @@ namespace Truant.Plus.Devices
 		public int ModelNumber{ get; private set; }
 
 		public int PreviousHeartBeatEventTime{ get; private set; }
-		// --------------------------------------------------------
+		// ---------------------------------------------------------
 
 		private bool pageChangeOn = false;
 		private bool pageChangeOff = false;
