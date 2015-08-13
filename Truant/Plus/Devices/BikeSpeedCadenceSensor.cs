@@ -12,10 +12,15 @@ namespace Truant.Plus.Devices
 
 		public double Cadence { get; private set; }
 		public double Speed { get; private set; }
-		// ---------------------------------------------------------
 
-		private int WheelSize;
-		private double SpeedFactor;
+		public int WheelSize { get; set; }
+
+		private double SpeedFactor
+		{
+			// To convert speed in mm per 1024th second to km/h
+			get{ return (3.6 * 1024.0 * WheelSize) / (1000.0); }
+		}
+		// ---------------------------------------------------------
 
 		public BikeSpeedCadenceSensor (int wheelSize)
 		{
@@ -24,9 +29,6 @@ namespace Truant.Plus.Devices
 			ChannelPeriod = 8086;
 
 			this.WheelSize = wheelSize;
-
-			// To convert speed in mm per 1024th second to km/h
-			this.SpeedFactor = (3.6 * 1024.0 * this.WheelSize) / (1000.0);
 		}
 
 		public override void interpretReceivedData(byte [] rxData)
