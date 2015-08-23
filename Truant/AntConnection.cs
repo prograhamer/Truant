@@ -104,6 +104,20 @@ namespace Truant
 			}
 		}
 
+		public void RemoveDevice(Device device)
+		{
+			for(byte i = 0; i < _Devices.Length; i++)
+			{
+				if(_Devices[i] == device)
+				{
+					AntInternal.ANT_CloseChannel(i);
+					// TODO: Wait for channel to close/unassign before returning
+					_Devices[i] = null;
+					break;
+				}
+			}
+		}
+
 		public void Disconnect()
 		{
 			Console.WriteLine("Disconnecting and resetting");
@@ -118,9 +132,10 @@ namespace Truant
 			Console.WriteLine ("Got AR callback: " + channel + " / msgId: " + messageID);
 
 			if (messageID == MessageType.RESPONSE_EVENT_ID) {
-				processResponseEvent(channel, messageID);
+				return processResponseEvent(channel, messageID);
 			} else if (messageID == MessageType.CHANNEL_ID_ID) {
 				Console.WriteLine ("CHANNEL_ID: " + BitConverter.ToString (_ResponseBuffer));
+				return processChannelIDEvent(channel, messageID);
 			}
 
 			return true;
@@ -179,6 +194,20 @@ namespace Truant
 				if(arStatus == ResponseStatus.NO_ERROR)
 				{
 					Console.WriteLine("Channel period set for #" + channel);
+					if(_Devices[channel].Status == DeviceStatus.UNPAIRED)
+					{
+						AntInternal.ANT_SetProximitySearch(channel, 2);
+					}
+					else
+					{
+						AntInternal.ANT_OpenChannel(channel);
+					}
+				}
+				break;
+			case MessageType.PROX_SEARCH_CONFIG_ID:
+				if(arStatus == ResponseStatus.NO_ERROR)
+				{
+					Console.WriteLine ("Channel search radius set for #" + channel);
 					AntInternal.ANT_OpenChannel(channel);
 				}
 				break;
@@ -200,6 +229,18 @@ namespace Truant
 			return true;
 		}
 
+		private static bool processChannelIDEvent(byte channel, MessageType messageID)
+		{
+			if(_Devices[channel].Status == DeviceStatus.PAIRING)
+			{
+				_Devices[channel].Status = DeviceStatus.PAIRED;
+				_Devices[channel].Config.DeviceID = (ushort) (_ResponseBuffer[1] + (_ResponseBuffer[2] << 8));
+				_Devices[channel].Config.TransmissionType = _ResponseBuffer[4];
+			}
+
+			return true;
+		}
+
 		private static bool channelEventCallback (byte channel, ResponseStatus channelEvent)
 		{
 			Console.WriteLine ("Got CE callback: " + channel + " / channelEvent: " + channelEvent);
@@ -209,6 +250,12 @@ namespace Truant
 				AntInternal.ANT_UnAssignChannel (channel);
 			} else if (channelEvent == ResponseStatus.EVENT_RX_FLAG_BROADCAST || channelEvent == ResponseStatus.EVENT_RX_BROADCAST) {
 				_Devices[channel].interpretReceivedData(_ChannelEventBuffer);
+
+				if(_Devices[channel].Status == DeviceStatus.UNPAIRED)
+				{
+					_Devices[channel].Status = DeviceStatus.PAIRING;
+					AntInternal.ANT_RequestMessage(channel, MessageType.CHANNEL_ID_ID);
+				}
 			}
 			return true;
 		}

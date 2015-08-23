@@ -45,6 +45,8 @@
     <Compile Include="Plus\Devices\HeartRateMonitor.cs" />
     <Compile Include="Plus\Devices\PlusDevice.cs" />
     <Compile Include="Plus\Devices\BikeSpeedCadenceSensor.cs" />
+    <Compile Include="DeviceConfig.cs" />
+    <Compile Include="DeviceStatus.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
