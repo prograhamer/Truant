@@ -5,13 +5,13 @@ namespace Truant.Plus.Devices
 	public class BikeSpeedCadenceSensor : PlusDevice
 	{
 		// Device-specific data attributes ------------------------
-		public int CadenceEventTime { get; private set; }
-		public int CadenceRevolutionCount { get; private set; }
-		public int SpeedEventTime { get; private set; }
-		public int SpeedRevolutionCount { get; private set; }
+		public int? CadenceEventTime { get; private set; }
+		public int? CadenceRevolutionCount { get; private set; }
+		public int? SpeedEventTime { get; private set; }
+		public int? SpeedRevolutionCount { get; private set; }
 
-		public double Cadence { get; private set; }
-		public double Speed { get; private set; }
+		public double? Cadence { get; private set; }
+		public double? Speed { get; private set; }
 
 		public int WheelSize { get; set; }
 
@@ -33,8 +33,8 @@ namespace Truant.Plus.Devices
 
 		public override void interpretReceivedData(byte [] rxData)
 		{
-			int oldEventTime, oldRevolutionCount;
-			int newEventTime, newRevolutionCount;
+			int? oldEventTime, oldRevolutionCount;
+			int? newEventTime, newRevolutionCount;
 
 			// Cadence update and calculation
 			oldEventTime = CadenceEventTime;

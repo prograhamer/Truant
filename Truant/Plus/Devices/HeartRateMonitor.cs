@@ -5,20 +5,20 @@ namespace Truant.Plus.Devices
 	public class HeartRateMonitor : PlusDevice
 	{
 		// Device-specific data attributes ------------------------
-		public int HeartBeatEventTime { get; private set; }
-		public int HeartBeatCount { get; private set; }
-		public int ComputedHeartRate { get; private set; }
+		public int? HeartBeatEventTime { get; private set; }
+		public int? HeartBeatCount { get; private set; }
+		public int? ComputedHeartRate { get; private set; }
 
-		public int CumulativeOperatingTime{ get; private set; }
+		public int? CumulativeOperatingTime{ get; private set; }
 
-		public int ManufacturerID{ get; private set; }
-		public int SerialNumber{ get; private set; }
+		public int? ManufacturerID{ get; private set; }
+		public int? SerialNumber{ get; private set; }
 
-		public int HardwareVersion{ get; private set; }
-		public int SoftwareVersion{ get; private set; }
-		public int ModelNumber{ get; private set; }
+		public int? HardwareVersion{ get; private set; }
+		public int? SoftwareVersion{ get; private set; }
+		public int? ModelNumber{ get; private set; }
 
-		public int PreviousHeartBeatEventTime{ get; private set; }
+		public int? PreviousHeartBeatEventTime{ get; private set; }
 		// ---------------------------------------------------------
 
 		private bool pageChangeOn = false;
