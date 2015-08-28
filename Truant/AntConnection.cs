@@ -181,14 +181,14 @@ namespace Truant
 				if(arStatus == ResponseStatus.NO_ERROR)
 				{
 					Console.WriteLine("Channel period set for #" + channel);
-					if(_Devices[channel].Status == DeviceStatus.UNPAIRED)
-					{
-						AntInternal.ANT_SetProximitySearch(channel, 2);
-					}
-					else
-					{
+//					if(_Devices[channel].Status == DeviceStatus.UNPAIRED)
+//					{
+//						AntInternal.ANT_SetProximitySearch(channel, 2);
+//					}
+//					else
+//					{
 						AntInternal.ANT_OpenChannel(channel);
-					}
+//					}
 				}
 				break;
 			case MessageType.PROX_SEARCH_CONFIG_ID:

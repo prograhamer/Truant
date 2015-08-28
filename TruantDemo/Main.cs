@@ -9,7 +9,7 @@ namespace TruantDemo
 	{
 		public static void Main (string[] args)
 		{
-			var connection = AntPlusConnection.GetConnection(1 /* USB device */, 0 /* network no */);
+			var connection = AntPlusConnection.GetConnection(0 /* USB device */, 0 /* network no */);
 
 			connection.Connect();
 
