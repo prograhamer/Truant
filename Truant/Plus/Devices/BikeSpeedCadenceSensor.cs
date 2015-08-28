@@ -43,7 +43,7 @@ namespace Truant.Plus.Devices
 			CadenceEventTime = rxData[1] + (rxData[2] << 8);
 			CadenceRevolutionCount = rxData[3] + (rxData[4] << 8);
 
-			if(CadenceEventTime != oldEventTime)
+			if(CadenceEventTime != null && oldEventTime != null && CadenceEventTime != oldEventTime)
 			{
 				newEventTime = CadenceEventTime;
 				if(newEventTime < oldEventTime) newEventTime += 65535;
@@ -60,7 +60,7 @@ namespace Truant.Plus.Devices
 			SpeedEventTime = rxData[5] + (rxData[6] << 8);
 			SpeedRevolutionCount = rxData[7] + (rxData[8] << 8);
 
-			if(SpeedEventTime != oldEventTime)
+			if(SpeedEventTime != null && oldEventTime != null && SpeedEventTime != oldEventTime)
 			{
 				newEventTime = SpeedEventTime;
 				if(newEventTime < oldEventTime) newEventTime += 65535;
