@@ -41,29 +41,17 @@ namespace Truant
 
 		public void Connect()
 		{
-			if(_NetworkReady)
-			{
-				Console.WriteLine("Connect: network connection already open");
-				throw new Exception();
-			}
+			if(_NetworkReady) throw new DuplicateConnectionException("Network connection already open");
 
 			bool result;
 
 			result = AntInternal.ANT_Init(_UsbDevice, baud);
 
-			if(!result)
-			{
-				Console.WriteLine ("ANT_Init(): Failed to open device");
-				throw new Exception();
-			}
+			if(!result) throw new InitializationException("Failed to open ANT device");
 
 			result = AntInternal.ANT_ResetSystem ();
 
-			if(!result)
-			{
-				Console.WriteLine ("ANT_ResetSystem(): Failed to perform system reset");
-				throw new Exception();
-			}
+			if(!result) throw new InitializationException("Failed to reset ANT device");
 
 			Thread.Sleep (1000);
 
@@ -73,11 +61,7 @@ namespace Truant
 			Console.WriteLine ("Setting network key!");
 			result = AntInternal.ANT_SetNetworkKey (_Network, _NetworkKey);
 
-			if(!result)
-			{
-				Console.WriteLine("ANT_SetNetworkKey: Failed to set network key");
-				throw new Exception();
-			}
+			if(!result) throw new InitializationException("Failed to set network key");
 
 			while (!_NetworkReady && !_NetworkError) {
 				Thread.Sleep (100);
@@ -87,7 +71,7 @@ namespace Truant
 			{
 				_NetworkReady = false; _NetworkError = false;
 
-				throw new Exception();
+				throw new InitializationException("Error response to an initialization command");
 			}
 		}
 

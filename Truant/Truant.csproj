@@ -47,6 +47,8 @@
     <Compile Include="Plus\Devices\BikeSpeedCadenceSensor.cs" />
     <Compile Include="DeviceConfig.cs" />
     <Compile Include="DeviceStatus.cs" />
+    <Compile Include="DuplicateConnectionException.cs" />
+    <Compile Include="InitializationException.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
