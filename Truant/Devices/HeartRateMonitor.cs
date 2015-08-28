@@ -1,6 +1,6 @@
 using System;
 
-namespace Truant.Plus.Devices
+namespace Truant.Devices
 {
 	public class HeartRateMonitor : PlusDevice
 	{

@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
-using Truant.Plus;
-using Truant.Plus.Devices;
+using Truant;
+using Truant.Devices;
 
 namespace TruantDemo
 {

@@ -1,6 +1,6 @@
 using System;
 
-namespace Truant.Plus
+namespace Truant
 {
 	public class AntPlusConnection : AntConnection
 	{
