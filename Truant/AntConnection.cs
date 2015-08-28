@@ -105,6 +105,9 @@ namespace Truant
 		public void Disconnect()
 		{
 			Console.WriteLine("Disconnecting and resetting");
+
+			AntInternal.ANT_UnassignAllResponseFunctions();
+
 			AntInternal.ANT_ResetSystem();
 			AntInternal.ANT_Close();
 
