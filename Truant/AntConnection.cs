@@ -128,6 +128,12 @@ namespace Truant
 			return true;
 		}
 
+		// Process Response Event Message
+		//
+		// Byte:
+		// 0   : Channel Number
+		// 1   : Message ID (MessageType)
+		// 2   : Message Code (ResponseStatus)
 		private static bool processResponseEvent(byte channel, MessageType messageID)
 		{
 			MessageType arMessageID = (MessageType) _ResponseBuffer[1];
@@ -181,14 +187,7 @@ namespace Truant
 				if(arStatus == ResponseStatus.NO_ERROR)
 				{
 					Console.WriteLine("Channel period set for #" + channel);
-//					if(_Devices[channel].Status == DeviceStatus.UNPAIRED)
-//					{
-//						AntInternal.ANT_SetProximitySearch(channel, 2);
-//					}
-//					else
-//					{
-						AntInternal.ANT_OpenChannel(channel);
-//					}
+					AntInternal.ANT_OpenChannel(channel);
 				}
 				break;
 			case MessageType.PROX_SEARCH_CONFIG_ID:
@@ -216,6 +215,13 @@ namespace Truant
 			return true;
 		}
 
+		// Process Set Channel ID message
+		//
+		// Byte:
+		// 0   : Channel number
+		// 1-2 : Device Number (little-endian)
+		// 3   : MSB (1 bit) Pairing Bit / lower 7-bits Device Type
+		// 4   : Transmission type
 		private static bool processChannelIDEvent(byte channel, MessageType messageID)
 		{
 			if(_Devices[channel].Status == DeviceStatus.PAIRING)
