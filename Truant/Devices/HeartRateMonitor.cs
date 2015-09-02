@@ -31,6 +31,41 @@ namespace Truant.Devices
 			ChannelPeriod = 8070;
 		}
 
+		// Data Pages
+		// N.B. First byte is always the channel no.
+		//
+		// Page 0
+		// ------
+		// Byte:
+		// 1   : 1 bit (MSB) Page change toggle / lower 7 bits Data page number
+		// 2-4 : Reserved
+		// 5-6 : Heart beat event time (1/1024s)
+		// 7   : Heart beat count
+		// 8   : Computed heart rate (bpm)
+		//
+		// Page 1
+		// ------
+		// Byte:
+		// 2-4 : Cumulative operating time
+		//
+		// Page 2
+		// ------
+		// Byte:
+		// 2   : Manufacturer ID
+		// 3-4 : Serial number
+		//
+		// Page 3
+		// ------
+		// Byte:
+		// 2   : Hardware version
+		// 3   : Software version
+		// 4   : Model number
+		//
+		// Page 4
+		// ------
+		// Byte:
+		// 2   : Manufacturer specific (no interpretation)
+		// 2-3 : Previous heart beat event time (1/1024s)
 		public override void interpretReceivedData(byte [] rxData)
 		{
 			int page = (byte) (rxData [1] & 0x7F);
