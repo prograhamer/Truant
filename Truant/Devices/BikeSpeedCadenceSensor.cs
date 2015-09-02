@@ -31,6 +31,17 @@ namespace Truant.Devices
 			this.WheelSize = wheelSize;
 		}
 
+		// Data Pages
+		// N.B. First byte of rxData is the corresponding channel no.
+		//
+		// Page 0
+		// ------
+		// Byte:
+		// 1-2 : Cadence Event Time (little-endian) 1/1024s
+		// 3-4 : Cadence Revolution Count (little-endian)
+		// 5-6 : Speed Event Time (little-endian) 1/1024s
+		// 7-8 : Speed Revolution Count (little-endian)
+
 		public override void interpretReceivedData(byte [] rxData)
 		{
 			int? oldEventTime, oldRevolutionCount;
