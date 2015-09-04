@@ -22,7 +22,7 @@ namespace Tests
 				0x4A,       // Heart rate
 			};
 
-			sensor.interpretReceivedData(rxData);
+			sensor.InterpretReceivedData(rxData);
 
 			Assert.IsNull(sensor.CumulativeOperatingTime);
 			Assert.IsNull(sensor.ManufacturerID);

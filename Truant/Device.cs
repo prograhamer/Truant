@@ -26,7 +26,7 @@ namespace Truant
 			}
 		}
 
-		public abstract void interpretReceivedData(byte [] data);
+		public abstract void InterpretReceivedData(byte [] data);
 	}
 }
 

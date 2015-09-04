@@ -26,7 +26,7 @@ namespace Truant.Devices
 		// 2-4 : Reserved
 		// 5-6 : Speed Event Time (1/1024s)
 		// 7-8 : Speeed Revolution Count
-		public override void interpretReceivedData(byte [] rxData)
+		public override void InterpretReceivedData(byte [] rxData)
 		{
 			Processor.ProcessSpeedEvent(
 				rxData[5] + (rxData[6] << 8), // Event time

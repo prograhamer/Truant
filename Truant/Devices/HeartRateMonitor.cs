@@ -66,7 +66,7 @@ namespace Truant.Devices
 		// Byte:
 		// 2   : Manufacturer specific (no interpretation)
 		// 2-3 : Previous heart beat event time (1/1024s)
-		public override void interpretReceivedData(byte [] rxData)
+		public override void InterpretReceivedData(byte [] rxData)
 		{
 			int page = (byte) (rxData [1] & 0x7F);
 			bool pageChange = ((rxData [1] & 0x80) == 0x80);

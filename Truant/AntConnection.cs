@@ -242,7 +242,7 @@ namespace Truant
 				Console.WriteLine ("Channel #" + channel + "closed! Unassigning...");
 				AntInternal.ANT_UnAssignChannel (channel);
 			} else if (channelEvent == ResponseStatus.EVENT_RX_FLAG_BROADCAST || channelEvent == ResponseStatus.EVENT_RX_BROADCAST) {
-				_Devices[channel].interpretReceivedData(_ChannelEventBuffer);
+				_Devices[channel].InterpretReceivedData(_ChannelEventBuffer);
 
 				if(_Devices[channel].Status == DeviceStatus.UNPAIRED)
 				{

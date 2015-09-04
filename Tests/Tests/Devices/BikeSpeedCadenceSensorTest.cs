@@ -22,7 +22,7 @@ namespace Tests
 				0x03, 0x00, // Rev count
 				0, 0, 0, 0, // Speed data
 			};
-			sensor.interpretReceivedData(rxData);
+			sensor.InterpretReceivedData(rxData);
 			Assert.IsNull(sensor.Cadence);
 
 			rxData = new byte[] {
@@ -31,7 +31,7 @@ namespace Tests
 				0x06, 0x00, // Rev count
 				0, 0, 0, 0, // Speed data
 			};
-			sensor.interpretReceivedData(rxData);
+			sensor.InterpretReceivedData(rxData);
 			Assert.AreEqual(87.77, Math.Round((double) sensor.Cadence, 2));
 		}
 
@@ -49,7 +49,7 @@ namespace Tests
 				0xFE, 0xFF, // Rev count
 				0, 0, 0, 0, // Speed data
 			};
-			sensor.interpretReceivedData(rxData);
+			sensor.InterpretReceivedData(rxData);
 			Assert.IsNull(sensor.Cadence);
 
 			rxData = new byte[] {
@@ -59,7 +59,7 @@ namespace Tests
 				0, 0, 0, 0, // Speed data
 			};
 
-			sensor.interpretReceivedData(rxData);
+			sensor.InterpretReceivedData(rxData);
 			Assert.AreEqual(86.63, Math.Round((double) sensor.Cadence, 2));
 
 		}
@@ -79,7 +79,7 @@ namespace Tests
 				0x00, 0x08, // Event time
 				0x03, 0x00, // Rev count
 			};
-			sensor.interpretReceivedData(rxData);
+			sensor.InterpretReceivedData(rxData);
 			Assert.IsNull(sensor.Speed);
 
 			rxData = new byte[] {
@@ -88,7 +88,7 @@ namespace Tests
 				0xDB, 0x0B, // Event time
 				0x06, 0x00, // Rev count
 			};
-			sensor.interpretReceivedData(rxData);
+			sensor.InterpretReceivedData(rxData);
 			Assert.AreEqual(23.49, Math.Round((double) sensor.Speed, 2));
 		}
 
@@ -106,7 +106,7 @@ namespace Tests
 				0xB9, 0xFF, // Event time
 				0xFF, 0xFF, // Rev count
 			};
-			sensor.interpretReceivedData(rxData);
+			sensor.InterpretReceivedData(rxData);
 			Assert.IsNull(sensor.Speed);
 
 			rxData = new byte[] {
@@ -116,7 +116,7 @@ namespace Tests
 				0x03, 0x00, // Rev count
 			};
 
-			sensor.interpretReceivedData(rxData);
+			sensor.InterpretReceivedData(rxData);
 			Assert.AreEqual(24.97, Math.Round((double) sensor.Speed, 2));
 		}
 	}
