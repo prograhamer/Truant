@@ -26,7 +26,7 @@ namespace Tests
 
 			Assert.AreEqual (4148, processor.EventTime);
 			Assert.AreEqual (6, processor.EventCount);
-			Assert.AreEqual (0.00143, Math.Round((double) processor.Rate, 5));
+			Assert.AreEqual (1.46, Math.Round((double) processor.Rate, 2));
 		}
 
 		[Test]
@@ -48,7 +48,7 @@ namespace Tests
 
 			Assert.AreEqual (2831, processor.EventTime);
 			Assert.AreEqual (2, processor.EventCount);
-			Assert.AreEqual (0.00141, Math.Round((double) processor.Rate, 5));
+			Assert.AreEqual (1.44, Math.Round((double) processor.Rate, 2));
 		}
 	}
 }

@@ -6,7 +6,7 @@ namespace Truant.Processors
 			get { return Rate * CadenceFactor; }
 		}
 
-		private const int CadenceFactor = 61440;
+		private const int CadenceFactor = 60; // Revolutions/second -> RPM
 
 		public BikeCadenceProcessor() : base (65536)
 		{

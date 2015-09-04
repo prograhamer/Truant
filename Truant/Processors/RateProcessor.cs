@@ -31,7 +31,8 @@ namespace Truant.Processors
 				newEventCount = EventCount;
 				if(newEventCount < oldEventCount) newEventCount += Overflow;
 
-				Rate = ((double) newEventCount - oldEventCount) / (newEventTime - oldEventTime);
+				// Calculate rate in events/second
+				Rate = 1024 * ((double) newEventCount - oldEventCount) / (newEventTime - oldEventTime);
 			}
 		}
 	}
