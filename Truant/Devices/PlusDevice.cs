@@ -1,5 +1,3 @@
-using System;
-
 namespace Truant.Devices
 {
 	public abstract class PlusDevice : Device

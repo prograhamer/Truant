@@ -38,6 +38,7 @@
   <ItemGroup>
     <Compile Include="Devices\BikeSpeedCadenceSensorTest.cs" />
     <Compile Include="Devices\HeartRateMonitorTest.cs" />
+    <Compile Include="Devices\RateProcessorTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -49,9 +49,17 @@
     <Compile Include="Devices\HeartRateMonitor.cs" />
     <Compile Include="Devices\PlusDevice.cs" />
     <Compile Include="Devices\BikeSpeedCadenceSensor.cs" />
+    <Compile Include="Devices\BikeCadenceSensor.cs" />
+    <Compile Include="Devices\BikeSpeedSensor.cs" />
+    <Compile Include="Processors\IRateProcessor.cs" />
+    <Compile Include="Processors\RateProcessor.cs" />
+    <Compile Include="Processors\BikeSpeedProcessor.cs" />
+    <Compile Include="Processors\BikeCadenceProcessor.cs" />
+    <Compile Include="Processors\IBikeCadenceProcessor.cs" />
+    <Compile Include="Processors\IBikeSpeedProcessor.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <Folder Include="Plus\" />
+    <Folder Include="Processors\" />
   </ItemGroup>
 </Project>

@@ -24,8 +24,6 @@ namespace Tests
 			};
 			sensor.interpretReceivedData(rxData);
 			Assert.IsNull(sensor.Cadence);
-			Assert.AreEqual(3, sensor.CadenceRevolutionCount);
-			Assert.AreEqual(2048, sensor.CadenceEventTime);
 
 			rxData = new byte[] {
 				0,
@@ -34,8 +32,6 @@ namespace Tests
 				0, 0, 0, 0, // Speed data
 			};
 			sensor.interpretReceivedData(rxData);
-			Assert.AreEqual(6, sensor.CadenceRevolutionCount);
-			Assert.AreEqual(4148, sensor.CadenceEventTime);
 			Assert.AreEqual(87.77, Math.Round((double) sensor.Cadence, 2));
 		}
 
@@ -55,8 +51,6 @@ namespace Tests
 			};
 			sensor.interpretReceivedData(rxData);
 			Assert.IsNull(sensor.Cadence);
-			Assert.AreEqual(65534, sensor.CadenceRevolutionCount);
-			Assert.AreEqual(65530, sensor.CadenceEventTime);
 
 			rxData = new byte[] {
 				0,
@@ -66,8 +60,6 @@ namespace Tests
 			};
 
 			sensor.interpretReceivedData(rxData);
-			Assert.AreEqual(2, sensor.CadenceRevolutionCount);
-			Assert.AreEqual(2831, sensor.CadenceEventTime);
 			Assert.AreEqual(86.63, Math.Round((double) sensor.Cadence, 2));
 
 		}
@@ -78,6 +70,7 @@ namespace Tests
 			var sensor = new BikeSpeedCadenceSensor(2096);
 			byte [] rxData;
 
+			Assert.AreEqual(2096, sensor.WheelSize);
 			Assert.IsNull(sensor.Speed);
 
 			rxData = new byte[] {
@@ -88,8 +81,6 @@ namespace Tests
 			};
 			sensor.interpretReceivedData(rxData);
 			Assert.IsNull(sensor.Speed);
-			Assert.AreEqual(3, sensor.SpeedRevolutionCount);
-			Assert.AreEqual(2048, sensor.SpeedEventTime);
 
 			rxData = new byte[] {
 				0,
@@ -98,8 +89,6 @@ namespace Tests
 				0x06, 0x00, // Rev count
 			};
 			sensor.interpretReceivedData(rxData);
-			Assert.AreEqual(6, sensor.SpeedRevolutionCount);
-			Assert.AreEqual(3035, sensor.SpeedEventTime);
 			Assert.AreEqual(23.49, Math.Round((double) sensor.Speed, 2));
 		}
 
@@ -119,8 +108,6 @@ namespace Tests
 			};
 			sensor.interpretReceivedData(rxData);
 			Assert.IsNull(sensor.Speed);
-			Assert.AreEqual(65535, sensor.SpeedRevolutionCount);
-			Assert.AreEqual(65465, sensor.SpeedEventTime);
 
 			rxData = new byte[] {
 				0,
@@ -130,8 +117,6 @@ namespace Tests
 			};
 
 			sensor.interpretReceivedData(rxData);
-			Assert.AreEqual(3, sensor.SpeedRevolutionCount);
-			Assert.AreEqual(1167, sensor.SpeedEventTime);
 			Assert.AreEqual(24.97, Math.Round((double) sensor.Speed, 2));
 		}
 	}
