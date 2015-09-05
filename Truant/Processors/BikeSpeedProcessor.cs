@@ -12,7 +12,7 @@ namespace Truant.Processors
 			get{ return (0.0036d * WheelSize); }
 		}
 
-		public BikeSpeedProcessor(int wheelSize) : base(65536)
+		public BikeSpeedProcessor(int wheelSize) : base(65536, 65536) // EventTimeOverflow, EventCountOverflow
 		{
 			WheelSize = wheelSize;
 		}

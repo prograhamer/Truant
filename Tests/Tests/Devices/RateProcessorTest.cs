@@ -10,7 +10,7 @@ namespace Tests
 		[Test]
 		public void ProcessRateEvent ()
 		{
-			var processor = new RateProcessor (65536);
+			var processor = new RateProcessor (65536, 65536);
 
 			Assert.IsNull (processor.EventTime);
 			Assert.IsNull (processor.EventCount);
@@ -32,7 +32,7 @@ namespace Tests
 		[Test]
 		public void ProcessEventRateOverflow ()
 		{
-			var processor = new RateProcessor (65536);
+			var processor = new RateProcessor (65536, 65536);
 
 			Assert.IsNull (processor.EventTime);
 			Assert.IsNull (processor.EventCount);

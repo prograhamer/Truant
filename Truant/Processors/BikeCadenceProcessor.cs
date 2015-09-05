@@ -8,7 +8,7 @@ namespace Truant.Processors
 
 		private const int CadenceFactor = 60; // Revolutions/second -> RPM
 
-		public BikeCadenceProcessor() : base (65536)
+		public BikeCadenceProcessor() : base(65536, 65536) // EventTimeOverflow, EventCountOverflow
 		{
 		}
 

@@ -6,11 +6,13 @@ namespace Truant.Processors
 		public int? EventTime{ get; protected set; }
 		public int? EventCount{ get; protected set; }
 
-		private int Overflow;
+		private int EventTimeOverflow;
+		private int EventCountOverflow;
 
-		public RateProcessor (int overflow)
+		public RateProcessor (int eventTimeOverflow, int eventCountOverflow)
 		{
-			Overflow = overflow;
+			EventTimeOverflow = eventTimeOverflow;
+			EventCountOverflow = eventCountOverflow;
 		}
 
 		public void ProcessRateEvent (int eventTime, int eventCount)
@@ -27,9 +29,9 @@ namespace Truant.Processors
 			if(oldEventTime != null && EventTime != oldEventTime)
 			{
 				newEventTime = EventTime;
-				if(newEventTime < oldEventTime) newEventTime += Overflow;
+				if(newEventTime < oldEventTime) newEventTime += EventTimeOverflow;
 				newEventCount = EventCount;
-				if(newEventCount < oldEventCount) newEventCount += Overflow;
+				if(newEventCount < oldEventCount) newEventCount += EventCountOverflow;
 
 				// Calculate rate in events/second
 				Rate = 1024 * ((double) newEventCount - oldEventCount) / (newEventTime - oldEventTime);
