@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace Truant
 {
-	public class AntInternal
+	internal class AntInternal
 	{
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 		public delegate bool AssignResponseDelegate(byte channel, Truant.MessageType messageID);

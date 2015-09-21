@@ -82,6 +82,7 @@ namespace Truant
 				if(_Devices[i] == null)
 				{
 					_Devices[i] = device;
+					device.Connection = connection;
 					AntInternal.ANT_AssignChannel(i, ChannelType.SLAVE, _Network);
 					break;
 				}
@@ -97,6 +98,29 @@ namespace Truant
 					AntInternal.ANT_CloseChannel(i);
 					// TODO: Wait for channel to close/unassign before returning
 					_Devices[i] = null;
+					break;
+				}
+			}
+		}
+
+		// Always an 8 byte array to send
+		public void SendBroadcastData(Device device, byte [] data)
+		{
+			for(byte i = 0; i < _Devices.Length; i++)
+			{
+				if(_Devices[i] == device) {
+					AntInternal.ANT_SendBroadcastData(i, data);
+					break;
+				}
+			}
+		}
+
+		public void SendAcknowledgedData(Device device, byte [] data)
+		{
+			for(byte i = 0; i < _Devices.Length; i++)
+			{
+				if(_Devices[i] == device) {
+					AntInternal.ANT_SendAcknowledgedData(i, data);
 					break;
 				}
 			}
@@ -238,10 +262,21 @@ namespace Truant
 		{
 			Console.WriteLine ("Got CE callback: " + channel + " / channelEvent: " + channelEvent);
 
-			if (channelEvent == ResponseStatus.EVENT_CHANNEL_CLOSED) {
+			if (channelEvent == ResponseStatus.EVENT_CHANNEL_CLOSED)
+			{
 				Console.WriteLine ("Channel #" + channel + "closed! Unassigning...");
 				AntInternal.ANT_UnAssignChannel (channel);
-			} else if (channelEvent == ResponseStatus.EVENT_RX_FLAG_BROADCAST || channelEvent == ResponseStatus.EVENT_RX_BROADCAST) {
+			}
+			else if(channelEvent == ResponseStatus.EVENT_TRANSFER_TX_COMPLETED)
+			{
+				Console.WriteLine("Channel #" + channel + " Acknowledged data received");
+			}
+			else if(channelEvent == ResponseStatus.EVENT_TRANSFER_TX_FAILED)
+			{
+				Console.WriteLine("Channel #" + channel + " Acknowledged data failed");
+			}
+			else if (channelEvent == ResponseStatus.EVENT_RX_FLAG_BROADCAST || channelEvent == ResponseStatus.EVENT_RX_BROADCAST)
+			{
 				_Devices[channel].InterpretReceivedData(_ChannelEventBuffer);
 
 				if(_Devices[channel].Status == DeviceStatus.UNPAIRED)
