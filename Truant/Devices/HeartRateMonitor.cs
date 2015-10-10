@@ -1,4 +1,4 @@
-using System;
+using Truant.Processors;
 
 namespace Truant.Devices
 {
@@ -24,11 +24,18 @@ namespace Truant.Devices
 		private bool pageChangeOn = false;
 		private bool pageChangeOff = false;
 
+		private IHeartRateProcessor Processor;
+		public double? HeartRate {
+			get { return Processor.HeartRate; }
+		}
+
 		public HeartRateMonitor()
 		{
 			// ID and period as described in HR monitor device profile
 			DeviceType = 0x78;
 			ChannelPeriod = 8070;
+
+			Processor = new HeartRateProcessor();
 		}
 
 		// Data Pages
@@ -92,10 +99,14 @@ namespace Truant.Devices
 				}
 			}
 
-			HeartBeatEventTime = rxData[5] + (rxData[6] << 8);
-			HeartBeatCount = rxData [7];
+			int eventTime = rxData[5] + (rxData[6] << 8);
+			int eventCount = rxData [7];
+
+			HeartBeatEventTime = eventTime;
+			HeartBeatCount = eventCount;
 			ComputedHeartRate = rxData [8];
+
+			Processor.ProcessHeartRateEvent(eventTime, eventCount);
 		}
 	}
 }
-

@@ -57,6 +57,8 @@
     <Compile Include="Processors\BikeCadenceProcessor.cs" />
     <Compile Include="Processors\IBikeCadenceProcessor.cs" />
     <Compile Include="Processors\IBikeSpeedProcessor.cs" />
+    <Compile Include="Processors\IHeartRateProcessor.cs" />
+    <Compile Include="Processors\HeartRateProcessor.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
