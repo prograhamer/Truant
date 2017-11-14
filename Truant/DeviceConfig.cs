@@ -4,7 +4,7 @@ namespace Truant
 {
 	public class DeviceConfig
 	{
-		public ushort DeviceID { get; set; }
+		public ushort? DeviceID { get; set; }
 		public byte TransmissionType { get; set; }
 
 		public DeviceConfig()
