@@ -19,7 +19,7 @@ namespace Truant
 		private static bool _NetworkReady = false;
 		private static bool _NetworkError = false;
 
-		private static Device [] _Devices = new Device[8];
+        private static DeviceConnection [] _DeviceConnections = new DeviceConnection[8];
 
 		protected AntConnection(byte device, byte network, byte [] networkKey)
 		{
@@ -77,11 +77,11 @@ namespace Truant
 
 		public void AddDevice(Device device)
 		{
-			for(byte i = 0; i < _Devices.Length; i++)
+			for(byte i = 0; i < _DeviceConnections.Length; i++)
 			{
-				if(_Devices[i] == null)
+				if(_DeviceConnections[i] == null)
 				{
-					_Devices[i] = device;
+                    _DeviceConnections[i] = new DeviceConnection(device);
 					device.Connection = connection;
 					AntInternal.ANT_AssignChannel(i, ChannelType.SLAVE, _Network);
 					break;
@@ -91,13 +91,12 @@ namespace Truant
 
 		public void RemoveDevice(Device device)
 		{
-			for(byte i = 0; i < _Devices.Length; i++)
+			for(byte i = 0; i < _DeviceConnections.Length; i++)
 			{
-				if(_Devices[i] == device)
+				if(_DeviceConnections[i].Device == device)
 				{
 					AntInternal.ANT_CloseChannel(i);
-					// TODO: Wait for channel to close/unassign before returning
-					_Devices[i] = null;
+                    _DeviceConnections[i].ChannelCloseRequested = true;
 					break;
 				}
 			}
@@ -106,9 +105,9 @@ namespace Truant
 		// Always an 8 byte array to send
 		public void SendBroadcastData(Device device, byte [] data)
 		{
-			for(byte i = 0; i < _Devices.Length; i++)
+			for(byte i = 0; i < _DeviceConnections.Length; i++)
 			{
-				if(_Devices[i] == device) {
+				if(_DeviceConnections[i].Device == device) {
 					AntInternal.ANT_SendBroadcastData(i, data);
 					break;
 				}
@@ -117,9 +116,9 @@ namespace Truant
 
 		public void SendAcknowledgedData(Device device, byte [] data)
 		{
-			for(byte i = 0; i < _Devices.Length; i++)
+			for(byte i = 0; i < _DeviceConnections.Length; i++)
 			{
-				if(_Devices[i] == device) {
+				if(_DeviceConnections[i].Device == device) {
 					AntInternal.ANT_SendAcknowledgedData(i, data);
 					break;
 				}
@@ -179,7 +178,7 @@ namespace Truant
 				return true;
 			}
 
-			if(channel >= _Devices.Length || _Devices[channel] == null)
+			if(channel >= _DeviceConnections.Length || _DeviceConnections[channel] == null)
 			{
 				Console.WriteLine("RE message received for unexpected channel!");
 				return true;
@@ -193,9 +192,9 @@ namespace Truant
 							
 					AntInternal.ANT_SetChannelId(
                         channel,
-                        _Devices[channel].Config.DeviceID,
-                        _Devices[channel].DeviceType,
-                        _Devices[channel].Config.TransmissionType
+                        _DeviceConnections[channel].Device.Config.DeviceID,
+                        _DeviceConnections[channel].Device.DeviceType,
+                        _DeviceConnections[channel].Device.Config.TransmissionType
                     );
 				}
 				break;
@@ -203,14 +202,14 @@ namespace Truant
 				if(arStatus == ResponseStatus.NO_ERROR)
 				{
 					Console.WriteLine("Channel ID set for #" + channel);
-					AntInternal.ANT_SetChannelRFFreq(channel, _Devices[channel].RadioFrequency);
+					AntInternal.ANT_SetChannelRFFreq(channel, _DeviceConnections[channel].Device.RadioFrequency);
 				}
 				break;
 			case MessageType.CHANNEL_RADIO_FREQ_ID:
 				if(arStatus == ResponseStatus.NO_ERROR)
 				{
 					Console.WriteLine("RF frequency set for #" + channel);
-					AntInternal.ANT_SetChannelPeriod(channel, _Devices[channel].ChannelPeriod);
+					AntInternal.ANT_SetChannelPeriod(channel, _DeviceConnections[channel].Device.ChannelPeriod);
 				}
 				break;
 			case MessageType.CHANNEL_PERIOD_ID:
@@ -239,6 +238,16 @@ namespace Truant
 			case MessageType.CLOSE_CHANNEL_ID:
 				break;
 			case MessageType.UNASSIGN_CHANNEL_ID:
+                    if(arStatus == ResponseStatus.NO_ERROR)
+                    {
+                        if(_DeviceConnections[channel] == null) {
+                            Console.WriteLine("DeviceConnection for channel #{0} should be present, and isn't", channel);
+                        }
+                        else
+                        {
+                            _DeviceConnections[channel] = null;
+                        }
+                    }
 				break;
 			}
 
@@ -254,11 +263,11 @@ namespace Truant
 		// 4   : Transmission type
 		private static bool processChannelIDEvent(byte channel, MessageType messageID)
 		{
-			if(_Devices[channel].Status == DeviceStatus.PAIRING)
+			if(_DeviceConnections[channel].Device.Status == DeviceStatus.PAIRING)
 			{
-				_Devices[channel].Status = DeviceStatus.PAIRED;
-				_Devices[channel].Config.DeviceID = (ushort) (_ResponseBuffer[1] + (_ResponseBuffer[2] << 8));
-				_Devices[channel].Config.TransmissionType = _ResponseBuffer[4];
+				_DeviceConnections[channel].Device.Status = DeviceStatus.PAIRED;
+				_DeviceConnections[channel].Device.Config.DeviceID = (ushort) (_ResponseBuffer[1] + (_ResponseBuffer[2] << 8));
+				_DeviceConnections[channel].Device.Config.TransmissionType = _ResponseBuffer[4];
 			}
 
 			return true;
@@ -270,8 +279,16 @@ namespace Truant
 
 			if (channelEvent == ResponseStatus.EVENT_CHANNEL_CLOSED)
 			{
-				Console.WriteLine ("Channel #" + channel + "closed! Unassigning...");
-				AntInternal.ANT_UnAssignChannel (channel);
+                if(_DeviceConnections[channel].ChannelCloseRequested)
+                {
+                    Console.WriteLine ("Channel #" + channel + " closed, unassigning...");
+                    AntInternal.ANT_UnAssignChannel (channel);
+                }
+                else
+                {
+                    Console.WriteLine ("Channel #" + channel + " closed unexpectedly, re-opening...");
+                    AntInternal.ANT_OpenChannel(channel);
+                }
 			}
 			else if(channelEvent == ResponseStatus.EVENT_TRANSFER_TX_COMPLETED)
 			{
@@ -283,11 +300,11 @@ namespace Truant
 			}
 			else if (channelEvent == ResponseStatus.EVENT_RX_FLAG_BROADCAST || channelEvent == ResponseStatus.EVENT_RX_BROADCAST)
 			{
-				_Devices[channel].ReceiveData(_ChannelEventBuffer);
+				_DeviceConnections[channel].Device.ReceiveData(_ChannelEventBuffer);
 
-				if(_Devices[channel].Status == DeviceStatus.UNPAIRED)
+				if(_DeviceConnections[channel].Device.Status == DeviceStatus.UNPAIRED)
 				{
-					_Devices[channel].Status = DeviceStatus.PAIRING;
+					_DeviceConnections[channel].Device.Status = DeviceStatus.PAIRING;
 					AntInternal.ANT_RequestMessage(channel, MessageType.CHANNEL_ID_ID);
 				}
 			}
