@@ -7,6 +7,19 @@ namespace Truant
 		public byte DeviceType { get; protected set; }
 		public byte RadioFrequency { get; protected set; }
 		public ushort ChannelPeriod { get; protected set; }
+        private long? LastReceivedTicks { get; set; }
+        public TimeSpan? DataReceiptTimeSpan {
+            get {
+                if(LastReceivedTicks != null)
+                {
+                    return new TimeSpan(DateTime.UtcNow.Ticks - (long) LastReceivedTicks);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
 
 		internal AntConnection Connection { get; set; }
 
@@ -28,6 +41,13 @@ namespace Truant
 			}
 		}
 
+        public void ReceiveData(byte[] data)
+        {
+            LastReceivedTicks = DateTime.UtcNow.Ticks;
+
+            InterpretReceivedData(data);
+        }
+
 		protected void SendBroadcastData(byte [] data)
 		{
 			if(Connection != null)
@@ -44,7 +64,7 @@ namespace Truant
 			}
 		}
 
-		public abstract void InterpretReceivedData(byte [] data);
+		protected abstract void InterpretReceivedData(byte [] data);
 	}
 }
 
