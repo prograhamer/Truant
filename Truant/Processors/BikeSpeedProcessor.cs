@@ -2,14 +2,14 @@ namespace Truant.Processors
 {
 	public class BikeSpeedProcessor : RateProcessor, IBikeSpeedProcessor
 	{
-		public double? Speed{
-			get{ return Rate * SpeedFactor; }
+		public double? Speed {
+			get { return Rate * SpeedFactor; }
 		}
-		public int WheelSize{ get; set; }
+		public int WheelSize { get; set; }
 
-		private double SpeedFactor{
+		private double SpeedFactor {
 			// To convert speed in mm per second to km/h
-			get{ return (0.0036d * WheelSize); }
+			get { return (0.0036d * WheelSize); }
 		}
 
 		public BikeSpeedProcessor(int wheelSize) : base(65536, 65536) // EventTimeOverflow, EventCountOverflow
@@ -23,4 +23,3 @@ namespace Truant.Processors
 		}
 	}
 }
-

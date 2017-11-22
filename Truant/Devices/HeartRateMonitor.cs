@@ -9,16 +9,16 @@ namespace Truant.Devices
 		public int? HeartBeatCount { get; private set; }
 		public int? ComputedHeartRate { get; private set; }
 
-		public int? CumulativeOperatingTime{ get; private set; }
+		public int? CumulativeOperatingTime { get; private set; }
 
-		public int? ManufacturerID{ get; private set; }
-		public int? SerialNumber{ get; private set; }
+		public int? ManufacturerID { get; private set; }
+		public int? SerialNumber { get; private set; }
 
-		public int? HardwareVersion{ get; private set; }
-		public int? SoftwareVersion{ get; private set; }
-		public int? ModelNumber{ get; private set; }
+		public int? HardwareVersion { get; private set; }
+		public int? SoftwareVersion { get; private set; }
+		public int? ModelNumber { get; private set; }
 
-		public int? PreviousHeartBeatEventTime{ get; private set; }
+		public int? PreviousHeartBeatEventTime { get; private set; }
 		// ---------------------------------------------------------
 
 		private bool pageChangeOn = false;
@@ -73,10 +73,10 @@ namespace Truant.Devices
 		// Byte:
 		// 2   : Manufacturer specific (no interpretation)
 		// 2-3 : Previous heart beat event time (1/1024s)
-		protected override void InterpretReceivedData(byte [] rxData)
+		protected override void InterpretReceivedData(byte[] rxData)
 		{
-			int page = (byte) (rxData [1] & 0x7F);
-			bool pageChange = ((rxData [1] & 0x80) == 0x80);
+			int page = (byte)(rxData[1] & 0x7F);
+			bool pageChange = ((rxData[1] & 0x80) == 0x80);
 
 			if (pageChange) {
 				pageChangeOn = true;
@@ -100,11 +100,11 @@ namespace Truant.Devices
 			}
 
 			int eventTime = rxData[5] + (rxData[6] << 8);
-			int eventCount = rxData [7];
+			int eventCount = rxData[7];
 
 			HeartBeatEventTime = eventTime;
 			HeartBeatCount = eventCount;
-			ComputedHeartRate = rxData [8];
+			ComputedHeartRate = rxData[8];
 
 			Processor.ProcessHeartRateEvent(eventTime, eventCount);
 		}

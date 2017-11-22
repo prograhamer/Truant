@@ -2,7 +2,7 @@ namespace Truant.Processors
 {
 	public class HeartRateProcessor : RateProcessor, IHeartRateProcessor
 	{
-		public double? HeartRate{
+		public double? HeartRate {
 			get { return Rate * HeartRateFactor; }
 		}
 
@@ -18,4 +18,3 @@ namespace Truant.Processors
 		}
 	}
 }
-

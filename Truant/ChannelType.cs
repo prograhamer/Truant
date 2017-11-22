@@ -6,4 +6,3 @@ namespace Truant
 		SLAVE  = 1,
 	}
 }
-

@@ -9,7 +9,7 @@ namespace Truant.Devices
 			get { return Processor.Speed; }
 		}
 
-		public BikeSpeedSensor (int wheelSize)
+		public BikeSpeedSensor(int wheelSize)
 		{
 			DeviceType = 0x7B;
 			ChannelPeriod = 8118;
@@ -26,7 +26,7 @@ namespace Truant.Devices
 		// 2-4 : Reserved
 		// 5-6 : Speed Event Time (1/1024s)
 		// 7-8 : Speeed Revolution Count
-		protected override void InterpretReceivedData(byte [] rxData)
+		protected override void InterpretReceivedData(byte[] rxData)
 		{
 			Processor.ProcessSpeedEvent(
 				rxData[5] + (rxData[6] << 8), // Event time
@@ -35,4 +35,3 @@ namespace Truant.Devices
 		}
 	}
 }
-

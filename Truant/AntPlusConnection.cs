@@ -5,9 +5,9 @@ namespace Truant
 	public class AntPlusConnection : AntConnection
 	{
 		// ANT+ Managed network key
-		private static byte [] networkKey = {0, 0, 0, 0, 0, 0, 0, 0};
+		private static byte[] networkKey = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
-		private AntPlusConnection(byte device, byte network, byte [] networkKey) : base(device, network, networkKey)
+		private AntPlusConnection(byte device, byte network, byte[] networkKey) : base(device, network, networkKey)
 		{
 		}
 
@@ -22,4 +22,3 @@ namespace Truant
 		}
 	}
 }
-

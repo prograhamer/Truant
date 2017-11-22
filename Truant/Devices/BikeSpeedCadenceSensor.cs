@@ -8,11 +8,11 @@ namespace Truant.Devices
 		private IBikeCadenceProcessor CadenceProcessor;
 
 		public double? Speed {
-			get{ return SpeedProcessor.Speed; }
+			get { return SpeedProcessor.Speed; }
 		}
 
 		public double? Cadence {
-			get{ return CadenceProcessor.Cadence; }
+			get { return CadenceProcessor.Cadence; }
 		}
 
 		public int WheelSize {
@@ -20,7 +20,7 @@ namespace Truant.Devices
 			set { SpeedProcessor.WheelSize = value; }
 		}
 
-		public BikeSpeedCadenceSensor (int wheelSize)
+		public BikeSpeedCadenceSensor(int wheelSize)
 		{
 			// ID and period as described in device profile
 			DeviceType = 0x79;
@@ -40,7 +40,7 @@ namespace Truant.Devices
 		// 3-4 : Cadence Revolution Count (little-endian)
 		// 5-6 : Speed Event Time (little-endian) 1/1024s
 		// 7-8 : Speed Revolution Count (little-endian)
-		protected override void InterpretReceivedData(byte [] rxData)
+		protected override void InterpretReceivedData(byte[] rxData)
 		{
 			CadenceProcessor.ProcessCadenceEvent(
 				rxData[1] + (rxData[2] << 8), // Event time
@@ -54,4 +54,3 @@ namespace Truant.Devices
 		}
 	}
 }
-

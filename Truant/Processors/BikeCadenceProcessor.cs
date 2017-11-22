@@ -2,7 +2,7 @@ namespace Truant.Processors
 {
 	public class BikeCadenceProcessor : RateProcessor, IBikeCadenceProcessor
 	{
-		public double? Cadence{
+		public double? Cadence {
 			get { return Rate * CadenceFactor; }
 		}
 
@@ -18,4 +18,3 @@ namespace Truant.Processors
 		}
 	}
 }
-
