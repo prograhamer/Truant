@@ -189,18 +189,14 @@ namespace Truant
 			case MessageType.ASSIGN_CHANNEL_ID:
 				if(arStatus == ResponseStatus.NO_ERROR)
 				{
-					ushort deviceID = 0;
-					byte txType = 0;
-
 					Console.WriteLine("Channel assigned for #" + channel);
-
-					if (_Devices[channel].Config.DeviceID != null)
-					{
-						deviceID = (ushort) _Devices[channel].Config.DeviceID;
-						txType = _Devices[channel].Config.TransmissionType;
-					}
 							
-					AntInternal.ANT_SetChannelId(channel, deviceID, _Devices[channel].DeviceType, txType);
+					AntInternal.ANT_SetChannelId(
+                        channel,
+                        _Devices[channel].Config.DeviceID,
+                        _Devices[channel].DeviceType,
+                        _Devices[channel].Config.TransmissionType
+                    );
 				}
 				break;
 			case MessageType.CHANNEL_ID_ID:

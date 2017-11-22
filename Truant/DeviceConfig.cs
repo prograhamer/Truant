@@ -4,7 +4,7 @@ namespace Truant
 {
 	public class DeviceConfig
 	{
-		public ushort? DeviceID { get; set; }
+		public ushort DeviceID { get; set; }
 		public byte TransmissionType { get; set; }
 
 		public DeviceConfig()
@@ -13,8 +13,8 @@ namespace Truant
 
 		public DeviceConfig(ushort deviceID, byte transmissionType)
 		{
-			this.DeviceID = deviceID;
-			this.TransmissionType = transmissionType;
+			DeviceID = deviceID;
+			TransmissionType = transmissionType;
 		}
 
 		public override string ToString()
