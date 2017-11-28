@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Threading;
 
 namespace Truant
@@ -58,7 +59,7 @@ namespace Truant
 			AntInternal.ANT_AssignResponseFunction(assignResponseCallback, _ResponseBuffer);
 			// AntInternal.ANT_AssignChannelEventFunction (channel, channelEventCallback, _ChannelEventBuffer);
 
-			Console.WriteLine("Setting network key!");
+			Debug.WriteLine("Setting network key!");
 			result = AntInternal.ANT_SetNetworkKey(_Network, _NetworkKey);
 
 			if (!result) throw new InitializationException("Failed to set network key");
@@ -120,7 +121,7 @@ namespace Truant
 
 		public void Disconnect()
 		{
-			Console.WriteLine("Disconnecting and resetting");
+			Debug.WriteLine("Disconnecting and resetting");
 
 			AntInternal.ANT_UnassignAllResponseFunctions();
 
@@ -132,12 +133,12 @@ namespace Truant
 
 		private static bool assignResponseCallback(byte channel, Truant.MessageType messageID)
 		{
-			Console.WriteLine("Got AR callback: " + channel + " / msgId: " + messageID);
+			Debug.WriteLine("Got AR callback: " + channel + " / msgId: " + messageID);
 
 			if (messageID == MessageType.RESPONSE_EVENT_ID) {
 				return processResponseEvent(channel, messageID);
 			} else if (messageID == MessageType.CHANNEL_ID_ID) {
-				Console.WriteLine("CHANNEL_ID: " + BitConverter.ToString(_ResponseBuffer));
+				Debug.WriteLine("CHANNEL_ID: " + BitConverter.ToString(_ResponseBuffer));
 				return processChannelIDEvent(channel, messageID);
 			}
 
@@ -155,11 +156,11 @@ namespace Truant
 			MessageType arMessageID = (MessageType)_ResponseBuffer[1];
 			ResponseStatus arStatus = (ResponseStatus)_ResponseBuffer[2];
 
-			Console.WriteLine("RE: arMessageId=" + arMessageID + ", arStatus=" + arStatus);
+			Debug.WriteLine("RE: arMessageId=" + arMessageID + ", arStatus=" + arStatus);
 
 			if (arMessageID == MessageType.NETWORK_KEY_ID) {
 				if (arStatus == ResponseStatus.NO_ERROR) {
-					Console.WriteLine("Network key set");
+					Debug.WriteLine("Network key set");
 					_NetworkReady = true;
 				} else {
 					_NetworkError = true;
@@ -168,14 +169,14 @@ namespace Truant
 			}
 
 			if (channel >= _DeviceConnections.Length || _DeviceConnections[channel] == null) {
-				Console.WriteLine("RE message received for unexpected channel!");
+				Debug.WriteLine("RE message received for unexpected channel!");
 				return true;
 			}
 
 			switch (arMessageID) {
 				case MessageType.ASSIGN_CHANNEL_ID:
 					if (arStatus == ResponseStatus.NO_ERROR) {
-						Console.WriteLine("Channel assigned for #" + channel);
+						Debug.WriteLine("Channel assigned for #" + channel);
 
 						AntInternal.ANT_SetChannelId(
 							channel,
@@ -187,31 +188,31 @@ namespace Truant
 					break;
 				case MessageType.CHANNEL_ID_ID:
 					if (arStatus == ResponseStatus.NO_ERROR) {
-						Console.WriteLine("Channel ID set for #" + channel);
+						Debug.WriteLine("Channel ID set for #" + channel);
 						AntInternal.ANT_SetChannelRFFreq(channel, _DeviceConnections[channel].Device.RadioFrequency);
 					}
 					break;
 				case MessageType.CHANNEL_RADIO_FREQ_ID:
 					if (arStatus == ResponseStatus.NO_ERROR) {
-						Console.WriteLine("RF frequency set for #" + channel);
+						Debug.WriteLine("RF frequency set for #" + channel);
 						AntInternal.ANT_SetChannelPeriod(channel, _DeviceConnections[channel].Device.ChannelPeriod);
 					}
 					break;
 				case MessageType.CHANNEL_PERIOD_ID:
 					if (arStatus == ResponseStatus.NO_ERROR) {
-						Console.WriteLine("Channel period set for #" + channel);
+						Debug.WriteLine("Channel period set for #" + channel);
 						AntInternal.ANT_OpenChannel(channel);
 					}
 					break;
 				case MessageType.PROX_SEARCH_CONFIG_ID:
 					if (arStatus == ResponseStatus.NO_ERROR) {
-						Console.WriteLine("Channel search radius set for #" + channel);
+						Debug.WriteLine("Channel search radius set for #" + channel);
 						AntInternal.ANT_OpenChannel(channel);
 					}
 					break;
 				case MessageType.OPEN_CHANNEL_ID:
 					if (arStatus == ResponseStatus.NO_ERROR) {
-						Console.WriteLine("Channel #" + channel + " open!");
+						Debug.WriteLine("Channel #" + channel + " open!");
 						AntInternal.ANT_AssignChannelEventFunction(channel, channelEventCallback, _ChannelEventBuffer);
 					}
 					break;
@@ -222,7 +223,7 @@ namespace Truant
 				case MessageType.UNASSIGN_CHANNEL_ID:
 					if (arStatus == ResponseStatus.NO_ERROR) {
 						if (_DeviceConnections[channel] == null) {
-							Console.WriteLine("DeviceConnection for channel #{0} should be present, and isn't", channel);
+							Debug.WriteLine("DeviceConnection for channel #{0} should be present, and isn't", channel);
 						} else {
 							_DeviceConnections[channel] = null;
 						}
@@ -253,20 +254,20 @@ namespace Truant
 
 		private static bool channelEventCallback(byte channel, ResponseStatus channelEvent)
 		{
-			Console.WriteLine("Got CE callback: " + channel + " / channelEvent: " + channelEvent);
+			Debug.WriteLine("Got CE callback: " + channel + " / channelEvent: " + channelEvent);
 
 			if (channelEvent == ResponseStatus.EVENT_CHANNEL_CLOSED) {
 				if (_DeviceConnections[channel].ChannelCloseRequested) {
-					Console.WriteLine("Channel #" + channel + " closed, unassigning...");
+					Debug.WriteLine("Channel #" + channel + " closed, unassigning...");
 					AntInternal.ANT_UnAssignChannel(channel);
 				} else {
-					Console.WriteLine("Channel #" + channel + " closed unexpectedly, re-opening...");
+					Debug.WriteLine("Channel #" + channel + " closed unexpectedly, re-opening...");
 					AntInternal.ANT_OpenChannel(channel);
 				}
 			} else if (channelEvent == ResponseStatus.EVENT_TRANSFER_TX_COMPLETED) {
-				Console.WriteLine("Channel #" + channel + " Acknowledged data received");
+				Debug.WriteLine("Channel #" + channel + " Acknowledged data received");
 			} else if (channelEvent == ResponseStatus.EVENT_TRANSFER_TX_FAILED) {
-				Console.WriteLine("Channel #" + channel + " Acknowledged data failed");
+				Debug.WriteLine("Channel #" + channel + " Acknowledged data failed");
 			} else if (channelEvent == ResponseStatus.EVENT_RX_FLAG_BROADCAST || channelEvent == ResponseStatus.EVENT_RX_BROADCAST) {
 				_DeviceConnections[channel].Device.ReceiveData(_ChannelEventBuffer);
 
