@@ -7,7 +7,7 @@ namespace Truant
 		public byte DeviceType { get; protected set; }
 		public byte RadioFrequency { get; protected set; }
 		public ushort ChannelPeriod { get; protected set; }
-		private long? LastReceivedTicks { get; set; }
+		long? LastReceivedTicks { get; set; }
 		public TimeSpan? DataReceiptTimeSpan {
 			get {
 				if (LastReceivedTicks != null) {
@@ -23,10 +23,8 @@ namespace Truant
 		public DeviceConfig Config { get; set; }
 		public DeviceStatus Status { get; set; }
 
-		public Device()
+		public Device() : this(new DeviceConfig())
 		{
-			this.Status = DeviceStatus.UNPAIRED;
-			this.Config = new DeviceConfig();
 		}
 
 		public Device(DeviceConfig config)
@@ -42,6 +40,8 @@ namespace Truant
 			LastReceivedTicks = DateTime.UtcNow.Ticks;
 
 			InterpretReceivedData(data);
+
+			TriggerNewDataCallbacks();
 		}
 
 		protected void SendBroadcastData(byte[] data)
@@ -59,5 +59,6 @@ namespace Truant
 		}
 
 		protected abstract void InterpretReceivedData(byte[] data);
+		protected abstract void TriggerNewDataCallbacks();
 	}
 }

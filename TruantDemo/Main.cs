@@ -22,10 +22,10 @@ namespace TruantDemo
 			for(int i = 0; i < 45; i++)
 			{
 				Thread.Sleep(1000);
-				Console.WriteLine("Heart rate: " + hrMonitor.ComputedHeartRate);
+				Console.WriteLine("Heart rate: " + hrMonitor.Data.ComputedHeartRate);
 				Console.WriteLine("HR device config: " + hrMonitor.Config);
-				Console.WriteLine("Instantaneous speed: " + speedCadence.Speed);
-				Console.WriteLine ("Instantaneous cadence: " + speedCadence.Cadence);
+				Console.WriteLine("Instantaneous speed: " + speedCadence.Data.Speed);
+				Console.WriteLine ("Instantaneous cadence: " + speedCadence.Data.Cadence);
 			}
 
 			connection.Disconnect();

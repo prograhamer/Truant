@@ -22,19 +22,19 @@ namespace Tests
 				0x4A,       // Heart rate
 			};
 
-			sensor.InterpretReceivedData(rxData);
+			sensor.ReceiveData(rxData);
 
-			Assert.IsNull(sensor.CumulativeOperatingTime);
-			Assert.IsNull(sensor.ManufacturerID);
-			Assert.IsNull(sensor.SerialNumber);
-			Assert.IsNull(sensor.HardwareVersion);
-			Assert.IsNull(sensor.SoftwareVersion);
-			Assert.IsNull(sensor.ModelNumber);
-			Assert.IsNull(sensor.PreviousHeartBeatEventTime);
+			Assert.IsNull(sensor.Data.CumulativeOperatingTime);
+			Assert.IsNull(sensor.Data.ManufacturerID);
+			Assert.IsNull(sensor.Data.SerialNumber);
+			Assert.IsNull(sensor.Data.HardwareVersion);
+			Assert.IsNull(sensor.Data.SoftwareVersion);
+			Assert.IsNull(sensor.Data.ModelNumber);
+			Assert.IsNull(sensor.Data.PreviousHeartBeatEventTime);
 
-			Assert.AreEqual(61456, sensor.HeartBeatEventTime);
-			Assert.AreEqual(127, sensor.HeartBeatCount);
-			Assert.AreEqual(74, sensor.ComputedHeartRate);
+			Assert.AreEqual(61456, sensor.Data.HeartBeatEventTime);
+			Assert.AreEqual(127, sensor.Data.HeartBeatCount);
+			Assert.AreEqual(74, sensor.Data.ComputedHeartRate);
 		}
 	}
 }

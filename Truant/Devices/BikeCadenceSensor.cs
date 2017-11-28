@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Truant.Processors;
 
 namespace Truant.Devices
@@ -6,9 +7,21 @@ namespace Truant.Devices
 	{
 		private IBikeCadenceProcessor Processor;
 
-		public double? Cadence {
-			get { return Processor.Cadence; }
+		public struct BikeCadenceData
+		{
+			public double? Cadence;
 		}
+
+		private BikeCadenceData _Data;
+
+		public BikeCadenceData Data {
+			get {
+				return _Data;
+			}
+		}
+
+		public delegate void NewDataCallback(ushort id, BikeCadenceData data);
+		private List<NewDataCallback> NewDataCallbacks = new List<NewDataCallback>();
 
 		public BikeCadenceSensor()
 		{
@@ -17,6 +30,11 @@ namespace Truant.Devices
 			ChannelPeriod = 8102;
 
 			Processor = new BikeCadenceProcessor();
+		}
+
+		public void AddNewDataCallback(NewDataCallback callback)
+		{
+			NewDataCallbacks.Add(callback);
 		}
 
 		// Data Pages
@@ -35,6 +53,15 @@ namespace Truant.Devices
 				rxData[5] + (rxData[6] << 8), // Event time
 				rxData[7] + (rxData[8] << 8)  // Revolution count
 			);
+
+			_Data.Cadence = Processor.Cadence;
+		}
+
+		protected override void TriggerNewDataCallbacks()
+		{
+			foreach (NewDataCallback callback in NewDataCallbacks) {
+				callback(Config.DeviceID, _Data);
+			}
 		}
 	}
 }

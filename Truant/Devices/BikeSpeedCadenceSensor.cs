@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Truant.Processors;
 
 namespace Truant.Devices
@@ -7,18 +8,27 @@ namespace Truant.Devices
 		private IBikeSpeedProcessor SpeedProcessor;
 		private IBikeCadenceProcessor CadenceProcessor;
 
-		public double? Speed {
-			get { return SpeedProcessor.Speed; }
-		}
-
-		public double? Cadence {
-			get { return CadenceProcessor.Cadence; }
+		public struct BikeSpeedCadenceData
+		{
+			public double? Speed;
+			public double? Cadence;
 		}
 
 		public int WheelSize {
 			get { return SpeedProcessor.WheelSize; }
 			set { SpeedProcessor.WheelSize = value; }
 		}
+
+		private BikeSpeedCadenceData _Data;
+
+		public BikeSpeedCadenceData Data {
+			get {
+				return _Data;
+			}
+		}
+
+		public delegate void NewDataCallback(ushort id, BikeSpeedCadenceData data);
+		private List<NewDataCallback> NewDataCallbacks = new List<NewDataCallback>();
 
 		public BikeSpeedCadenceSensor(int wheelSize)
 		{
@@ -28,6 +38,11 @@ namespace Truant.Devices
 
 			SpeedProcessor = new BikeSpeedProcessor(wheelSize);
 			CadenceProcessor = new BikeCadenceProcessor();
+		}
+
+		public void AddNewDataCallback(NewDataCallback callback)
+		{
+			NewDataCallbacks.Add(callback);
 		}
 
 		// Data Pages
@@ -51,6 +66,16 @@ namespace Truant.Devices
 				rxData[5] + (rxData[6] << 8), // Event time
 				rxData[7] + (rxData[8] << 8)  // Revolution count
 			);
+
+			_Data.Cadence = CadenceProcessor.Cadence;
+			_Data.Speed = SpeedProcessor.Speed;
+		}
+
+		protected override void TriggerNewDataCallbacks()
+		{
+			foreach (NewDataCallback callback in NewDataCallbacks) {
+				callback(Config.DeviceID, _Data);
+			}
 		}
 	}
 }
