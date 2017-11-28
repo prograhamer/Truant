@@ -38,9 +38,6 @@ namespace Truant.Devices
 
 		private IHeartRateProcessor Processor;
 
-		public delegate void NewDataCallback(ushort id, HeartRateData data);
-		private List<NewDataCallback> NewDataCallbacks = new List<NewDataCallback>();
-
 		public HeartRateMonitor()
 		{
 			// ID and period as described in HR monitor device profile
@@ -48,11 +45,6 @@ namespace Truant.Devices
 			ChannelPeriod = 8070;
 
 			Processor = new HeartRateProcessor();
-		}
-
-		public void AddNewDataCallback(NewDataCallback callback)
-		{
-			NewDataCallbacks.Add(callback);
 		}
 
 		// Data Pages

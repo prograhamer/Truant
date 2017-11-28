@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Truant
 {
@@ -23,6 +24,9 @@ namespace Truant
 		public DeviceConfig Config { get; set; }
 		public DeviceStatus Status { get; set; }
 
+		public delegate void NewDataCallback(ushort id, object data);
+		protected List<NewDataCallback> NewDataCallbacks = new List<NewDataCallback>();
+
 		public Device() : this(new DeviceConfig())
 		{
 		}
@@ -39,9 +43,16 @@ namespace Truant
 		{
 			LastReceivedTicks = DateTime.UtcNow.Ticks;
 
-			InterpretReceivedData(data);
+			lock (this) {
+				InterpretReceivedData(data);
 
-			TriggerNewDataCallbacks();
+				TriggerNewDataCallbacks();
+			}
+		}
+
+		public void AddNewDataCallback(NewDataCallback callback)
+		{
+			NewDataCallbacks.Add(callback);
 		}
 
 		protected void SendBroadcastData(byte[] data)

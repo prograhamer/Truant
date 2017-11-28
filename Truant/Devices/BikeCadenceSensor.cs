@@ -20,9 +20,6 @@ namespace Truant.Devices
 			}
 		}
 
-		public delegate void NewDataCallback(ushort id, BikeCadenceData data);
-		private List<NewDataCallback> NewDataCallbacks = new List<NewDataCallback>();
-
 		public BikeCadenceSensor()
 		{
 			// ID and period as described in device profile
@@ -30,11 +27,6 @@ namespace Truant.Devices
 			ChannelPeriod = 8102;
 
 			Processor = new BikeCadenceProcessor();
-		}
-
-		public void AddNewDataCallback(NewDataCallback callback)
-		{
-			NewDataCallbacks.Add(callback);
 		}
 
 		// Data Pages

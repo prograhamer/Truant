@@ -27,9 +27,6 @@ namespace Truant.Devices
 			}
 		}
 
-		public delegate void NewDataCallback(ushort id, BikeSpeedCadenceData data);
-		private List<NewDataCallback> NewDataCallbacks = new List<NewDataCallback>();
-
 		public BikeSpeedCadenceSensor(int wheelSize)
 		{
 			// ID and period as described in device profile
@@ -38,11 +35,6 @@ namespace Truant.Devices
 
 			SpeedProcessor = new BikeSpeedProcessor(wheelSize);
 			CadenceProcessor = new BikeCadenceProcessor();
-		}
-
-		public void AddNewDataCallback(NewDataCallback callback)
-		{
-			NewDataCallbacks.Add(callback);
 		}
 
 		// Data Pages

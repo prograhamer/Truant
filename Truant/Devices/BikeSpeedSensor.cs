@@ -20,20 +20,12 @@ namespace Truant.Devices
 			}
 		}
 
-		public delegate void NewDataCallback(ushort id, BikeSpeedData data);
-		private List<NewDataCallback> NewDataCallbacks = new List<NewDataCallback>();
-
 		public BikeSpeedSensor(int wheelSize)
 		{
 			DeviceType = 0x7B;
 			ChannelPeriod = 8118;
 
 			Processor = new BikeSpeedProcessor(wheelSize);
-		}
-
-		public void AddNewDataCallback(NewDataCallback callback)
-		{
-			NewDataCallbacks.Add(callback);
 		}
 
 		// Data Pages
