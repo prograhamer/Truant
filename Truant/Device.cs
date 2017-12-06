@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 
 namespace Truant
 {
@@ -25,7 +25,7 @@ namespace Truant
 		public DeviceStatus Status { get; set; }
 
 		public delegate void NewDataCallback(ushort id, object data);
-		protected List<NewDataCallback> NewDataCallbacks = new List<NewDataCallback>();
+		protected BlockingCollection<NewDataCallback> NewDataCallbacks = new BlockingCollection<NewDataCallback>();
 
 		public Device() : this(new DeviceConfig())
 		{
@@ -46,7 +46,7 @@ namespace Truant
 			lock (this) {
 				InterpretReceivedData(data);
 
-				TriggerNewDataCallbacks();
+				if (Config.DeviceID != 0) TriggerNewDataCallbacks();
 			}
 		}
 
