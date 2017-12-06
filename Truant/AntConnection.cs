@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Threading;
+using System.Runtime.InteropServices;
 
 namespace Truant
 {
@@ -9,9 +10,16 @@ namespace Truant
 		private static AntConnection connection;
 
 		private const int baud = 57600;
+		private const int max_channels = 8;
+		private const int buffer_length = 32;
 
-		private static byte[] _ResponseBuffer = new byte[32];
-		private static byte[] _ChannelEventBuffer = new byte[32];
+		unsafe struct BufferType
+		{
+			public fixed byte Data[buffer_length];
+		}
+
+		static BufferType _ResponseBuffer;
+		static BufferType _ChannelEventBuffer;
 
 		private static byte _UsbDevice;
 		private static byte _Network;
@@ -20,7 +28,7 @@ namespace Truant
 		private static bool _NetworkReady = false;
 		private static bool _NetworkError = false;
 
-		private static DeviceConnection[] _DeviceConnections = new DeviceConnection[8];
+		private static DeviceConnection[] _DeviceConnections = new DeviceConnection[max_channels];
 
 		protected AntConnection(byte device, byte network, byte[] networkKey)
 		{
@@ -40,7 +48,7 @@ namespace Truant
 			return connection;
 		}
 
-		public void Connect()
+		unsafe public void Connect()
 		{
 			if (_NetworkReady) throw new DuplicateConnectionException("Network connection already open");
 
@@ -56,8 +64,9 @@ namespace Truant
 
 			Thread.Sleep(1000);
 
-			AntInternal.ANT_AssignResponseFunction(assignResponseCallback, _ResponseBuffer);
-			// AntInternal.ANT_AssignChannelEventFunction (channel, channelEventCallback, _ChannelEventBuffer);
+			fixed (byte* rbPtr = _ResponseBuffer.Data) {
+				AntInternal.ANT_AssignResponseFunction(assignResponseCallback, rbPtr);
+			}
 
 			Debug.WriteLine("Setting network key!");
 			result = AntInternal.ANT_SetNetworkKey(_Network, _NetworkKey);
@@ -138,7 +147,6 @@ namespace Truant
 			if (messageID == MessageType.RESPONSE_EVENT_ID) {
 				return processResponseEvent(channel, messageID);
 			} else if (messageID == MessageType.CHANNEL_ID_ID) {
-				Debug.WriteLine("CHANNEL_ID: " + BitConverter.ToString(_ResponseBuffer));
 				return processChannelIDEvent(channel, messageID);
 			}
 
@@ -151,10 +159,15 @@ namespace Truant
 		// 0   : Channel Number
 		// 1   : Message ID (MessageType)
 		// 2   : Message Code (ResponseStatus)
-		private static bool processResponseEvent(byte channel, MessageType messageID)
+		unsafe private static bool processResponseEvent(byte channel, MessageType messageID)
 		{
-			MessageType arMessageID = (MessageType)_ResponseBuffer[1];
-			ResponseStatus arStatus = (ResponseStatus)_ResponseBuffer[2];
+			MessageType arMessageID;
+			ResponseStatus arStatus;
+
+			fixed (byte* rbPtr = _ResponseBuffer.Data) {
+				arMessageID = (MessageType)rbPtr[1];
+				arStatus = (ResponseStatus)rbPtr[2];
+			}
 
 			Debug.WriteLine("RE: arMessageId=" + arMessageID + ", arStatus=" + arStatus);
 
@@ -213,7 +226,9 @@ namespace Truant
 				case MessageType.OPEN_CHANNEL_ID:
 					if (arStatus == ResponseStatus.NO_ERROR) {
 						Debug.WriteLine("Channel #" + channel + " open!");
-						AntInternal.ANT_AssignChannelEventFunction(channel, channelEventCallback, _ChannelEventBuffer);
+						fixed (byte* cePtr = _ChannelEventBuffer.Data) {
+							AntInternal.ANT_AssignChannelEventFunction(channel, channelEventCallback, cePtr);
+						}
 					}
 					break;
 				case MessageType.RX_EXT_MESGS_ENABLE_ID:
@@ -241,18 +256,20 @@ namespace Truant
 		// 1-2 : Device Number (little-endian)
 		// 3   : MSB (1 bit) Pairing Bit / lower 7-bits Device Type
 		// 4   : Transmission type
-		private static bool processChannelIDEvent(byte channel, MessageType messageID)
+		unsafe private static bool processChannelIDEvent(byte channel, MessageType messageID)
 		{
-			if (_DeviceConnections[channel].Device.Status == DeviceStatus.PAIRING) {
-				_DeviceConnections[channel].Device.Status = DeviceStatus.PAIRED;
-				_DeviceConnections[channel].Device.Config.DeviceID = (ushort)(_ResponseBuffer[1] + (_ResponseBuffer[2] << 8));
-				_DeviceConnections[channel].Device.Config.TransmissionType = _ResponseBuffer[4];
+			fixed (byte* rePtr = _ResponseBuffer.Data) {
+				if (_DeviceConnections[channel].Device.Status == DeviceStatus.PAIRING) {
+					_DeviceConnections[channel].Device.Status = DeviceStatus.PAIRED;
+					_DeviceConnections[channel].Device.Config.DeviceID = (ushort)(rePtr[1] + (rePtr[2] << 8));
+					_DeviceConnections[channel].Device.Config.TransmissionType = rePtr[4];
+				}
 			}
 
 			return true;
 		}
 
-		private static bool channelEventCallback(byte channel, ResponseStatus channelEvent)
+		unsafe private static bool channelEventCallback(byte channel, ResponseStatus channelEvent)
 		{
 			Debug.WriteLine("Got CE callback: " + channel + " / channelEvent: " + channelEvent);
 
@@ -269,7 +286,20 @@ namespace Truant
 			} else if (channelEvent == ResponseStatus.EVENT_TRANSFER_TX_FAILED) {
 				Debug.WriteLine("Channel #" + channel + " Acknowledged data failed");
 			} else if (channelEvent == ResponseStatus.EVENT_RX_FLAG_BROADCAST || channelEvent == ResponseStatus.EVENT_RX_BROADCAST) {
-				_DeviceConnections[channel].Device.ReceiveData(_ChannelEventBuffer);
+				fixed (byte* cePtr = _ChannelEventBuffer.Data) {
+					byte[] tmpBuffer = new byte[buffer_length];
+					Marshal.Copy((IntPtr)cePtr, tmpBuffer, 0, buffer_length);
+
+					Debug.WriteLine("Channel #" + channel + " Buffer: " + BitConverter.ToString(tmpBuffer, 0, 10));
+
+					_DeviceConnections[channel].Device.ReceiveData(tmpBuffer);
+
+#if DEBUG
+					for (int _i = 0; _i < buffer_length; _i++) {
+						cePtr[_i] = 0;
+					}
+#endif
+				}
 
 				if (_DeviceConnections[channel].Device.Status == DeviceStatus.UNPAIRED) {
 					_DeviceConnections[channel].Device.Status = DeviceStatus.PAIRING;
