@@ -23,6 +23,7 @@ namespace Truant.Devices
 			public int? PreviousHeartBeatEventTime { get; internal set; }
 
 			public double? HeartRate { get; internal set; }
+			public double? RRPeriod { get; internal set; }
 		}
 
 		private HeartRateData _Data;
@@ -117,6 +118,7 @@ namespace Truant.Devices
 
 			Processor.ProcessHeartRateEvent(eventTime, eventCount);
 			_Data.HeartRate = Processor.HeartRate;
+			_Data.RRPeriod = Processor.RRPeriod;
 		}
 
 		protected override void TriggerNewDataCallbacks()

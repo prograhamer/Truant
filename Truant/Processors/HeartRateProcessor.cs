@@ -6,6 +6,10 @@ namespace Truant.Processors
 			get { return Rate * HeartRateFactor; }
 		}
 
+		public double? RRPeriod {
+			get { return Period; }
+		}
+
 		private const int HeartRateFactor = 60; // Beats/second -> BPM
 
 		public HeartRateProcessor() : base(65536, 256) // EventTimeOverflow, EventCountOverflow
