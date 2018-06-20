@@ -4,6 +4,7 @@ namespace Truant.Processors
 	{
 		double? Speed { get; }
 		int WheelSize { get; set; }
+		bool NewEvent { get; }
 
 		void ProcessSpeedEvent(int eventTime, int revolutionCount);
 	}

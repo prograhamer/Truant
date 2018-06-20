@@ -6,6 +6,7 @@ namespace Truant.Processors
 		public double? Period { get; protected set; }
 		public int? EventTime { get; protected set; }
 		public int? EventCount { get; protected set; }
+		public bool NewEvent { get; protected set; }
 
 		private int EventTimeOverflow;
 		private int EventCountOverflow;
@@ -28,19 +29,22 @@ namespace Truant.Processors
 			EventCount = eventCount;
 
 			if (oldEventTime != null && EventTime != oldEventTime) {
+				NewEvent = true;
+
 				newEventTime = EventTime;
 				if (newEventTime < oldEventTime) newEventTime += EventTimeOverflow;
 				newEventCount = EventCount;
 				if (newEventCount < oldEventCount) newEventCount += EventCountOverflow;
 
-				if (newEventCount - oldEventCount == 1)
-				{
+				if (newEventCount - oldEventCount == 1) {
 					Period = 1.024 * (newEventTime - oldEventTime) / (newEventCount - oldEventCount);
 				} else {
 					Period = null;
 				}
 				// Calculate rate in events/second
 				Rate = 1024 * ((double)newEventCount - oldEventCount) / (newEventTime - oldEventTime);
+			} else {
+				NewEvent = false;
 			}
 		}
 	}

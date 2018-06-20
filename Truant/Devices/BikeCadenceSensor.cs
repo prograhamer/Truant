@@ -39,7 +39,7 @@ namespace Truant.Devices
 		// 2-4 : Reserved
 		// 5-6 : Cadence Event Time (1/1024s)
 		// 7-8 : Cadence Revolution Count
-		protected override void InterpretReceivedData(byte[] rxData)
+		protected override bool InterpretReceivedData(byte[] rxData)
 		{
 			Processor.ProcessCadenceEvent(
 				rxData[5] + (rxData[6] << 8), // Event time
@@ -47,6 +47,8 @@ namespace Truant.Devices
 			);
 
 			_Data.Cadence = Processor.Cadence;
+
+			return Processor.NewEvent;
 		}
 
 		protected override void TriggerNewDataCallbacks()

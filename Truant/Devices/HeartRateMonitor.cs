@@ -83,7 +83,7 @@ namespace Truant.Devices
 		// Byte:
 		// 2   : Manufacturer specific (no interpretation)
 		// 2-3 : Previous heart beat event time (1/1024s)
-		protected override void InterpretReceivedData(byte[] rxData)
+		protected override bool InterpretReceivedData(byte[] rxData)
 		{
 			int page = (byte)(rxData[1] & 0x7F);
 			bool pageChange = ((rxData[1] & 0x80) == 0x80);
@@ -119,6 +119,8 @@ namespace Truant.Devices
 			Processor.ProcessHeartRateEvent(eventTime, eventCount);
 			_Data.HeartRate = Processor.HeartRate;
 			_Data.RRPeriod = Processor.RRPeriod;
+
+			return Processor.NewEvent;
 		}
 
 		protected override void TriggerNewDataCallbacks()

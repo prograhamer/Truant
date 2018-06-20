@@ -47,7 +47,7 @@ namespace Truant.Devices
 		// 3-4 : Cadence Revolution Count (little-endian)
 		// 5-6 : Speed Event Time (little-endian) 1/1024s
 		// 7-8 : Speed Revolution Count (little-endian)
-		protected override void InterpretReceivedData(byte[] rxData)
+		protected override bool InterpretReceivedData(byte[] rxData)
 		{
 			CadenceProcessor.ProcessCadenceEvent(
 				rxData[1] + (rxData[2] << 8), // Event time
@@ -61,6 +61,8 @@ namespace Truant.Devices
 
 			_Data.Cadence = CadenceProcessor.Cadence;
 			_Data.Speed = SpeedProcessor.Speed;
+
+			return CadenceProcessor.NewEvent || SpeedProcessor.NewEvent;
 		}
 
 		protected override void TriggerNewDataCallbacks()

@@ -4,6 +4,7 @@ namespace Truant.Processors
 	{
 		double? HeartRate { get; }
         double? RRPeriod { get; }
+		bool NewEvent { get; }
 
 		void ProcessHeartRateEvent(int eventTime, int eventCount);
 	}

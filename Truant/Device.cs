@@ -44,9 +44,9 @@ namespace Truant
 			LastReceivedTicks = DateTime.UtcNow.Ticks;
 
 			lock (this) {
-				InterpretReceivedData(data);
-
-				if (Config.DeviceID != 0) TriggerNewDataCallbacks();
+				if (InterpretReceivedData(data) && Config.DeviceID != 0) {
+					TriggerNewDataCallbacks();
+				}
 			}
 		}
 
@@ -69,7 +69,7 @@ namespace Truant
 			}
 		}
 
-		protected abstract void InterpretReceivedData(byte[] data);
+		protected abstract bool InterpretReceivedData(byte[] data);
 		protected abstract void TriggerNewDataCallbacks();
 	}
 }
